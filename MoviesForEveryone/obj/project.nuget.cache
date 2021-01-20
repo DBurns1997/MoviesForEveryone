@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "a/f/KhMY5R48TV7K6jL4MryiUClWaQQGIxRUYBvWm9A3YoPYIgoMek2yzv+0omCG4aQi4rmVLYCknCbZcxxNwA==",
+  "dgSpecHash": "Mlmdeus5Y26olOYRQfoWHqwA6uyIP5YAilFcS3FlgSmKvoskH2F44PcLoQ8gKfCOrouF6QLARCHs/Ch6iOur2w==",
   "success": true,
   "projectFilePath": "D:\\MoviesForEveryone\\MoviesForEveryone\\MoviesForEveryone\\MoviesForEveryone.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\David\\.nuget\\packages\\system.net.http.json\\5.0.0\\system.net.http.json.5.0.0.nupkg.sha512",
+    "C:\\Users\\David\\.nuget\\packages\\system.text.json\\5.0.0\\system.text.json.5.0.0.nupkg.sha512"
+  ],
   "logs": []
 }
