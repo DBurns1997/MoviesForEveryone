@@ -38,3 +38,7 @@ D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\obj\Debug\netcoreapp3.1
 D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\bin\Debug\netcoreapp3.1\System.Net.Http.Json.dll
 D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\bin\Debug\netcoreapp3.1\System.Text.Json.dll
 D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\obj\Debug\netcoreapp3.1\Razor\MovieFinder.cshtml.g.cs
+D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\obj\Debug\netcoreapp3.1\Razor\Pages\MovieQueuePage.cshtml.g.cs
+D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\bin\Debug\netcoreapp3.1\System.Net.Http.Extensions.dll
+D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\bin\Debug\netcoreapp3.1\System.Net.Http.Primitives.dll
+D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
