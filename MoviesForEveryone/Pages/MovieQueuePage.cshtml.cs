@@ -19,11 +19,12 @@ namespace MoviesForEveryone.Pages
         public async Task<IActionResult> OnGetPopulateQueue()
         {
             using var client = new HttpClient();
-            var response = await client.GetAsync("https://api.themoviedb.org/3/movie/550?api_key=89d7b6827e40162f83ec0bb9bccc5ee6");
+            var response = await client.GetAsync("https://api.themoviedb.org/3/movie/550?api_key=89d7b6827e40162f83ec0bb9bccc5ee6"); //TEST API Request URL, gets "Fight Club"
             if (response != null)
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
                 object movie = JsonConvert.DeserializeObject<object>(jsonString);
+                
             }
             return RedirectToPage();
         }
