@@ -24,9 +24,12 @@ namespace MoviesForEveryone.Pages
         //Use API GET requests to populate the movie queue
         public async Task<IActionResult> OnGetPopulateQueue()
         {
+            Random rnd = new Random();
+            int latestID = 790000, //This is the max ID for movies on TMDB 
+                movieId = rnd.Next(1, latestID); 
             Movie movieToAdd = new Movie();
             using var client = new HttpClient();
-            var response = await client.GetAsync("https://api.themoviedb.org/3/movie/670?api_key=89d7b6827e40162f83ec0bb9bccc5ee6"); //TEST API Request URL, gets "Oldboy"
+            var response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}?api_key=89d7b6827e40162f83ec0bb9bccc5ee6"); //Gets a random movie from TMDB using movieID
             if (response != null)
             {            
                 string jsonString = await response.Content.ReadAsStringAsync();
@@ -58,7 +61,7 @@ namespace MoviesForEveryone.Pages
                 }
 
                 //Seperate API call to get the keywords for the film
-                response = await client.GetAsync("https://api.themoviedb.org/3/movie/670/keywords?api_key=89d7b6827e40162f83ec0bb9bccc5ee6");
+                response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}/keywords?api_key=89d7b6827e40162f83ec0bb9bccc5ee6");
                 if (response != null)
                 {
                     string jsonKeywords = await response.Content.ReadAsStringAsync();
@@ -76,7 +79,7 @@ namespace MoviesForEveryone.Pages
                 }
 
                 //Last API call to get director 
-                response = await client.GetAsync("https://api.themoviedb.org/3/movie/670/credits?api_key=89d7b6827e40162f83ec0bb9bccc5ee6"); //TEST API Request URL, gets "Oldboy"
+                response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}/credits?api_key=89d7b6827e40162f83ec0bb9bccc5ee6"); //TEST API Request URL, gets "Oldboy"
                 if (response != null)
                 {
                     string credString = await response.Content.ReadAsStringAsync();
@@ -103,7 +106,7 @@ namespace MoviesForEveryone.Pages
 
 
 
-                    //movieQueue.Append(newMovie);                
+                    movieQueue.Append(movieToAdd);                
 
                 }
             return RedirectToPage();
