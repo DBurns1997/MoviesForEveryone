@@ -24,29 +24,88 @@ namespace MoviesForEveryone.Pages
         //Use API GET requests to populate the movie queue
         public async Task<IActionResult> OnGetPopulateQueue()
         {
+            Movie movieToAdd = new Movie();
             using var client = new HttpClient();
-            var response = await client.GetAsync("https://api.themoviedb.org/3/movie/550?api_key=89d7b6827e40162f83ec0bb9bccc5ee6"); //TEST API Request URL, gets "Fight Club"
+            var response = await client.GetAsync("https://api.themoviedb.org/3/movie/670?api_key=89d7b6827e40162f83ec0bb9bccc5ee6"); //TEST API Request URL, gets "Oldboy"
             if (response != null)
-            {
-                
-                Movie movieToAdd = new Movie();
+            {            
                 string jsonString = await response.Content.ReadAsStringAsync();
                 JsonReader reader = new JsonTextReader(new StringReader(jsonString));
                 while (reader.Read())
-                {   
+                {
                     if (reader.Value != null)
                     {
-                        Console.WriteLine("Token: {0}, Value{1}", reader.TokenType, reader.Value);
+                        //Parse the JSON data we want 
+                        switch(reader.Value.ToString())
+                        {
+                            case "title":
+                                reader.Read(); //Red the next token to get the actual title
+                                movieToAdd.movieTitle = reader.Value.ToString();   
+                                break;
+                            case "overview":
+                                reader.Read();
+                                movieToAdd.overview = reader.Value.ToString();
+                                break;
+                            case "genres":
+                                while (reader.Value == null || reader.Value.ToString() != "name" ) reader.Read();
+                                reader.Read();
+                                movieToAdd.genre = reader.Value.ToString();
+                                break;
+                            default:
+                                break;
+                        }                                             
                     }
                 }
-                JObject newMovie = JsonConvert.DeserializeObject<JObject>(jsonString);
-                
 
-                
+                //Seperate API call to get the keywords for the film
+                response = await client.GetAsync("https://api.themoviedb.org/3/movie/670/keywords?api_key=89d7b6827e40162f83ec0bb9bccc5ee6");
+                if (response != null)
+                {
+                    string jsonKeywords = await response.Content.ReadAsStringAsync();
+                    JsonReader keyReader = new JsonTextReader(new StringReader(jsonKeywords));
+                    while (keyReader.Read())
+                    {
+                        if (keyReader.Value != null)
+                        {
+                            while (keyReader.Value == null || keyReader.Value.ToString() != "name") keyReader.Read();
+                            keyReader.Read();
+                            movieToAdd.keywords.Add(keyReader.Value.ToString());
 
-                //movieQueue.Append(newMovie);                
-                
-            }
+                        }
+                    }
+                }
+
+                //Last API call to get director 
+                response = await client.GetAsync("https://api.themoviedb.org/3/movie/670/credits?api_key=89d7b6827e40162f83ec0bb9bccc5ee6"); //TEST API Request URL, gets "Oldboy"
+                if (response != null)
+                {
+                    string credString = await response.Content.ReadAsStringAsync();
+                    JsonReader credReader = new JsonTextReader(new StringReader(credString));
+                    while (credReader.Read())
+                    {
+                        if (credReader.Value != null && credReader.Value.ToString() == "crew" )
+                        {
+                            bool dirFound = false;
+                            while (credReader.Read() && dirFound == false)
+                            {                                
+                                if (credReader.Value != null && credReader.Value.ToString() == "Directing")
+                                {
+                                    credReader.Read();
+                                    credReader.Read();
+                                    movieToAdd.movieDirector = credReader.Value.ToString();
+                                    dirFound = true;
+                                }
+                            }
+                        }
+                    }
+                    //JObject newMovie = JsonConvert.DeserializeObject<JObject>(jsonString);
+                }
+
+
+
+                    //movieQueue.Append(newMovie);                
+
+                }
             return RedirectToPage();
         }
     }
