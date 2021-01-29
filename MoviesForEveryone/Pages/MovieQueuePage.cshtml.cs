@@ -23,92 +23,102 @@ namespace MoviesForEveryone.Pages
         //[HttpGet]
         //Use API GET requests to populate the movie queue
         public async Task<IActionResult> OnGetPopulateQueue()
-        {
+        {            
             Random rnd = new Random();
             int latestID = 790000, //This is the max ID for movies on TMDB 
-                movieId = rnd.Next(1, latestID); 
+                movieId; 
             Movie movieToAdd = new Movie();
             using var client = new HttpClient();
-            var response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}?api_key=89d7b6827e40162f83ec0bb9bccc5ee6"); //Gets a random movie from TMDB using movieID
-            if (response != null)
-            {            
-                string jsonString = await response.Content.ReadAsStringAsync();
-                JsonReader reader = new JsonTextReader(new StringReader(jsonString));
-                while (reader.Read())
+ 
+
+            //Repeat ten times, one for each queue slot
+            for (int i = 0; i < 10; i++)
+            {
+                movieId = rnd.Next(1, latestID);
+                HttpResponseMessage response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}?api_key=89d7b6827e40162f83ec0bb9bccc5ee6"); //Gets a random movie from TMDB using movieID
+                while (!response.IsSuccessStatusCode) //If the API request fails, generate another ID and make another request
                 {
-                    if (reader.Value != null)
-                    {
-                        //Parse the JSON data we want 
-                        switch(reader.Value.ToString())
-                        {
-                            case "title":
-                                reader.Read(); //Red the next token to get the actual title
-                                movieToAdd.movieTitle = reader.Value.ToString();   
-                                break;
-                            case "overview":
-                                reader.Read();
-                                movieToAdd.overview = reader.Value.ToString();
-                                break;
-                            case "genres":
-                                while (reader.Value == null || reader.Value.ToString() != "name" ) reader.Read();
-                                reader.Read();
-                                movieToAdd.genre = reader.Value.ToString();
-                                break;
-                            default:
-                                break;
-                        }                                             
-                    }
+                    movieId = rnd.Next(1, latestID);
+                    response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}?api_key=89d7b6827e40162f83ec0bb9bccc5ee6"); //Gets a random movie from TMDB using movieID
                 }
-
-                //Seperate API call to get the keywords for the film
-                response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}/keywords?api_key=89d7b6827e40162f83ec0bb9bccc5ee6");
-                if (response != null)
+                if (response.IsSuccessStatusCode) //Just make ABSOLUTELY sure the API request was succesful
                 {
-                    string jsonKeywords = await response.Content.ReadAsStringAsync();
-                    JsonReader keyReader = new JsonTextReader(new StringReader(jsonKeywords));
-                    while (keyReader.Read())
+                    string jsonString = await response.Content.ReadAsStringAsync();
+                    JsonReader reader = new JsonTextReader(new StringReader(jsonString));
+                    while (reader.Read())
                     {
-                        if (keyReader.Value != null)
+                        if (reader.Value != null)
                         {
-                            while (keyReader.Value == null || keyReader.Value.ToString() != "name") keyReader.Read();
-                            keyReader.Read();
-                            movieToAdd.keywords.Add(keyReader.Value.ToString());
-
-                        }
-                    }
-                }
-
-                //Last API call to get director 
-                response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}/credits?api_key=89d7b6827e40162f83ec0bb9bccc5ee6"); //TEST API Request URL, gets "Oldboy"
-                if (response != null)
-                {
-                    string credString = await response.Content.ReadAsStringAsync();
-                    JsonReader credReader = new JsonTextReader(new StringReader(credString));
-                    while (credReader.Read())
-                    {
-                        if (credReader.Value != null && credReader.Value.ToString() == "crew" )
-                        {
-                            bool dirFound = false;
-                            while (credReader.Read() && dirFound == false)
-                            {                                
-                                if (credReader.Value != null && credReader.Value.ToString() == "Directing")
-                                {
-                                    credReader.Read();
-                                    credReader.Read();
-                                    movieToAdd.movieDirector = credReader.Value.ToString();
-                                    dirFound = true;
-                                }
+                            //Parse the JSON data we want 
+                            switch (reader.Value.ToString())
+                            {
+                                //TODO: Improve parsing code
+                                case "title":
+                                    reader.Read(); //Red the next token to get the actual title
+                                    movieToAdd.movieTitle = reader.Value.ToString();
+                                    break;
+                                case "overview":
+                                    reader.Read();
+                                    movieToAdd.overview = reader.Value.ToString();
+                                    break;
+                                case "genres":
+                                    while (reader.Value == null || reader.Value.ToString() != "name") reader.Read();
+                                    reader.Read();
+                                    movieToAdd.genre = reader.Value.ToString();
+                                    break;
+                                default:
+                                    break;
                             }
                         }
                     }
-                    //JObject newMovie = JsonConvert.DeserializeObject<JObject>(jsonString);
+
+                    //Seperate API call to get the keywords for the film
+                    response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}/keywords?api_key=89d7b6827e40162f83ec0bb9bccc5ee6");
+                    if (response != null)
+                    {
+                        string jsonKeywords = await response.Content.ReadAsStringAsync();
+                        JsonReader keyReader = new JsonTextReader(new StringReader(jsonKeywords));
+                        while (keyReader.Read())
+                        {
+                            if (keyReader.Value != null)
+                            {
+                                while (keyReader.Value == null || keyReader.Value.ToString() != "name") keyReader.Read();
+                                keyReader.Read();
+                                movieToAdd.keywords.Add(keyReader.Value.ToString());
+
+                            }
+                        }
+                    }
+
+                    //Last API call to get director 
+                    response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}/credits?api_key=89d7b6827e40162f83ec0bb9bccc5ee6"); //TEST API Request URL, gets "Oldboy"
+                    if (response != null)
+                    {
+                        string credString = await response.Content.ReadAsStringAsync();
+                        JsonReader credReader = new JsonTextReader(new StringReader(credString));
+                        while (credReader.Read())
+                        {
+                            if (credReader.Value != null && credReader.Value.ToString() == "crew")
+                            {
+                                bool dirFound = false;
+                                while (credReader.Read() && dirFound == false)
+                                {
+                                    if (credReader.Value != null && credReader.Value.ToString() == "Directing")
+                                    {
+                                        credReader.Read();
+                                        credReader.Read();
+                                        movieToAdd.movieDirector = credReader.Value.ToString();
+                                        dirFound = true;
+                                    }
+                                }
+                            }
+                        }
+                        //JObject newMovie = JsonConvert.DeserializeObject<JObject>(jsonString);
+                    }
+                    movieQueue.Append(movieToAdd);
+
                 }
-
-
-
-                    movieQueue.Append(movieToAdd);                
-
-                }
+            }
             return RedirectToPage();
         }
     }
