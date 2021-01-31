@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net.Http;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using MoviesForEveryone.Models;
 using System.IO;
 
@@ -20,10 +18,11 @@ namespace MoviesForEveryone.Pages
         {
         }
 
-        //[HttpGet]
+       
         //Use API GET requests to populate the movie queue
         public async Task<IActionResult> OnGetPopulateQueue()
-        {            
+        {
+            movieQueue = new Queue<Movie>();
             Random rnd = new Random();
             int latestID = 790000, //This is the max ID for movies on TMDB 
                 movieId; 
@@ -32,8 +31,9 @@ namespace MoviesForEveryone.Pages
  
 
             //Repeat ten times, one for each queue slot
+            //TODO: Add conditional to test is_adult
             for (int i = 0; i < 10; i++)
-            {
+            {     
                 movieId = rnd.Next(1, latestID);
                 HttpResponseMessage response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}?api_key=89d7b6827e40162f83ec0bb9bccc5ee6"); //Gets a random movie from TMDB using movieID
                 while (!response.IsSuccessStatusCode) //If the API request fails, generate another ID and make another request
@@ -51,8 +51,7 @@ namespace MoviesForEveryone.Pages
                         {
                             //Parse the JSON data we want 
                             switch (reader.Value.ToString())
-                            {
-                                //TODO: Improve parsing code
+                            {                                
                                 case "title":
                                     reader.Read(); //Red the next token to get the actual title
                                     movieToAdd.movieTitle = reader.Value.ToString();
@@ -62,9 +61,28 @@ namespace MoviesForEveryone.Pages
                                     movieToAdd.overview = reader.Value.ToString();
                                     break;
                                 case "genres":
-                                    while (reader.Value == null || reader.Value.ToString() != "name") reader.Read();
+                                    reader.Read(); //Move to the next token
                                     reader.Read();
-                                    movieToAdd.genre = reader.Value.ToString();
+                                    reader.Read();
+                                    while (reader.Value.ToString() != "homepage") //'Homepage' is the next section in each TMDB entry
+                                    {
+                                        reader.Read();
+                                        reader.Read();
+                                        if (reader.Value != null && reader.Value.ToString() == "name")
+                                        {
+                                            reader.Read();
+                                            movieToAdd.genres.Add(reader.Value.ToString());
+                                            reader.Read();
+                                            reader.Read();
+                                            reader.Read();
+                                        }
+                                        else 
+                                        {                                             
+                                            reader.Read();
+                                            reader.Read();
+                                        }
+                                    }
+                                    if (movieToAdd.genres.Count == 0 ) movieToAdd.genres.Add("N/A");
                                     break;
                                 default:
                                     break;
@@ -74,49 +92,54 @@ namespace MoviesForEveryone.Pages
 
                     //Seperate API call to get the keywords for the film
                     response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}/keywords?api_key=89d7b6827e40162f83ec0bb9bccc5ee6");
-                    if (response != null)
+                    if (response.IsSuccessStatusCode)
                     {
+                        bool readEnd = false;
                         string jsonKeywords = await response.Content.ReadAsStringAsync();
                         JsonReader keyReader = new JsonTextReader(new StringReader(jsonKeywords));
-                        while (keyReader.Read())
+                        while (keyReader.Read() && keyReader.TokenType != JsonToken.EndArray)
                         {
-                            if (keyReader.Value != null)
+                            if (keyReader.Value != null && keyReader.Value.ToString() == "name")
                             {
-                                while (keyReader.Value == null || keyReader.Value.ToString() != "name") keyReader.Read();
                                 keyReader.Read();
                                 movieToAdd.keywords.Add(keyReader.Value.ToString());
-
                             }
                         }
+                        if (movieToAdd.keywords.Count == 0) movieToAdd.keywords.Add("N/A");
                     }
 
                     //Last API call to get director 
-                    response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}/credits?api_key=89d7b6827e40162f83ec0bb9bccc5ee6"); //TEST API Request URL, gets "Oldboy"
-                    if (response != null)
+                    response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}/credits?api_key=89d7b6827e40162f83ec0bb9bccc5ee6"); 
+                    if (response.IsSuccessStatusCode)
                     {
                         string credString = await response.Content.ReadAsStringAsync();
                         JsonReader credReader = new JsonTextReader(new StringReader(credString));
-                        while (credReader.Read())
+                        while (credReader.Read() && credReader.TokenType != JsonToken.EndArray)
                         {
                             if (credReader.Value != null && credReader.Value.ToString() == "crew")
                             {
                                 bool dirFound = false;
                                 while (credReader.Read() && dirFound == false)
                                 {
-                                    if (credReader.Value != null && credReader.Value.ToString() == "Directing")
+                                    if (credReader.Value.ToString() == "name")
                                     {
                                         credReader.Read();
-                                        credReader.Read();
-                                        movieToAdd.movieDirector = credReader.Value.ToString();
-                                        dirFound = true;
+                                        string possibleName = credReader.Value.ToString();
+                                        movieToAdd.movieDirector = possibleName;
+                                        while(credReader.Read())
+                                        {
+                                            if (credReader.Value.ToString() == "Director")
+                                            {
+                                                dirFound = true;
+                                            }
+                                        }                                        
                                     }
                                 }
                             }
                         }
-                        //JObject newMovie = JsonConvert.DeserializeObject<JObject>(jsonString);
+                        if (movieToAdd.movieDirector == null) movieToAdd.movieDirector = "Unknown";                     
                     }
-                    movieQueue.Append(movieToAdd);
-
+                    movieQueue.Enqueue(movieToAdd);
                 }
             }
             return RedirectToPage();
