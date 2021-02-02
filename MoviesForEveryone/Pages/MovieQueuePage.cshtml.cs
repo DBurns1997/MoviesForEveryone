@@ -27,7 +27,7 @@ namespace MoviesForEveryone.Pages
             int latestID = 790000, //This is the max ID for movies on TMDB 
                 movieId; 
             Movie movieToAdd = new Movie();
-            using var client = new HttpClient();
+            using HttpClient client = new HttpClient();
  
 
             //Repeat ten times, one for each queue slot

@@ -1,11 +1,15 @@
 ﻿@page
 @model MoviesForEveryone.Pages.MapPageModel
+
+
+
 @{
+    await Model.OnGetAcquireLocation();
 }
 
 <iframe 
         width="600"
         height="450"
         frameborder="0" style="border:0"
-        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE&q=Space+Needle,Seattle+WA" allowfullscreen>
+        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE&q=movie+theater&origin=" allowfullscreen>
 </iframe>
