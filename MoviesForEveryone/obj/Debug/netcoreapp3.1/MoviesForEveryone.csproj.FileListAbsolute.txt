@@ -42,3 +42,4 @@ D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\obj\Debug\netcoreapp3.1
 D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\bin\Debug\netcoreapp3.1\System.Net.Http.Extensions.dll
 D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\bin\Debug\netcoreapp3.1\System.Net.Http.Primitives.dll
 D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\obj\Debug\netcoreapp3.1\Razor\Pages\MapPage.cshtml.g.cs
