@@ -16,8 +16,8 @@ namespace MoviesForEveryone.Pages
 
         public void OnGet()
         {
-        }
 
+        }
        
         //Use API GET requests to populate the movie queue
         public async Task<IActionResult> OnGetPopulateQueue()
