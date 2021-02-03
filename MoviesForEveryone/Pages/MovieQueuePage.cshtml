@@ -5,8 +5,29 @@
 }
 
 <body id="background">
-   @{
-       
+   @{       
        await Model.OnGetPopulateQueue();
    }
+
+    
+    <table style="width:auto">
+        <tr>
+            <th>Title</th>
+            <th>Genres</th>
+            <th>Keywords</th>
+            <th>Director</th>
+            <th>Description</th>
+        </tr>
+        @{ foreach (var movie in Model.movieQueue)
+            {
+                <tr>
+                    <th>@movie.movieTitle</th>                   
+                </tr>
+            }
+         }
+        
+    </table>
+       
+
+    </div>
 </body>
