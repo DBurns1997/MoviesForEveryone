@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace MoviesForEveryone
+namespace MoviesForEveryone.Pages
 {
-    public class MovieFinderModel : PageModel
+    public class ReviewPageModel : PageModel
     {
         public void OnGet()
         {

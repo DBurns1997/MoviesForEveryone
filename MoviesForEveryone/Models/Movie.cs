@@ -17,5 +17,6 @@ namespace MoviesForEveryone.Models
             keywords = new List<string>();
             genres = new List<string>();
         }
+        public bool marked { get; set; }
     };
 }
