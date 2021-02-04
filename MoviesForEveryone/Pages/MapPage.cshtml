@@ -5,13 +5,11 @@
 
 @{
     await Model.OnGetAcquireLocation();
-    string latStr = Model.getLat();
-    string longStr = Model.getLong();
 }
 
 <iframe 
         width="1200"
         height="900"
         frameborder="0" style="border:0"
-        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE&q=theaters+and+cinemas&center=@latStr,@longStr&zoom=12" allowfullscreen>
+        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE&q=theaters+and+cinemas&center=@Model.getLat(),@Model.getLong()&zoom=12" allowfullscreen>
 </iframe>

@@ -19,5 +19,10 @@ namespace MoviesForEveryone.Models
         public string concessionsReview { get; set; }
         public string arcadeReview { get; set; }
         public string experienceReview { get; set; }
+
+        public void calcAvg()
+        {
+            reviewAvgScore = (cleanlinessRating + concessionsRating + experienceRating + arcadeRating) / 4;
+        }
     }
 }
