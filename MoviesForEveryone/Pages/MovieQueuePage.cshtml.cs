@@ -93,8 +93,7 @@ namespace MoviesForEveryone.Pages
                     //Seperate API call to get the keywords for the film
                     response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}/keywords?api_key=89d7b6827e40162f83ec0bb9bccc5ee6");
                     if (response.IsSuccessStatusCode)
-                    {
-                        bool readEnd = false;
+                    {                        
                         string jsonKeywords = await response.Content.ReadAsStringAsync();
                         JsonReader keyReader = new JsonTextReader(new StringReader(jsonKeywords));
                         while (keyReader.Read() && keyReader.TokenType != JsonToken.EndArray)
