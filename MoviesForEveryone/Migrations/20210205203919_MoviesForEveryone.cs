@@ -38,6 +38,9 @@ namespace MoviesForEveryone.Migrations
                     concessionsReview = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     arcadeReview = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     experienceReview = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    helpfulRatingPercent = table.Column<float>(type: "real", nullable: false),
+                    numberHelpfulVotes = table.Column<int>(type: "int", nullable: false),
+                    totalHelpRates = table.Column<int>(type: "int", nullable: false),
                     TheaterId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>

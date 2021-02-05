@@ -13,18 +13,10 @@ namespace MoviesForEveryone.Pages
         public async Task OnGetAsync()
         {
             //TODO: Get current theater
-            _reviews = await _context.Reviews.ToListAsync();
-            /*_reviews = await _context.Reviews.Where(rev => rev.reviewKey > 0) //Change this query when theaters are implimented
-                        .Include(rev => rev.cleanlinessRating)
-                        .Include(rev => rev.concessionsRating)
-                        .Include(rev => rev.arcadeRating)
-                        .Include(rev => rev.experienceRating)
-                        .Include(rev => rev.reviewAvgScore)
-                        .Include(rev => rev.cleanlinessReview)
-                        .Include(rev => rev.concessionsReview)
-                        .Include(rev => rev.arcadeReview)
-                        .Include(rev => rev.experienceReview).ToListAsync();*/
+            _reviews = await _context.Reviews.ToListAsync(); //Change this query when theaters are added.           
         }
+
+
 
         public ViewReviewsModel(MoviesForEveryone.Models.MoviesDbContext context)
         {

@@ -10,7 +10,7 @@ using MoviesForEveryone.Models;
 namespace MoviesForEveryone.Migrations
 {
     [DbContext(typeof(MoviesDbContext))]
-    [Migration("20210204000245_MoviesForEveryone")]
+    [Migration("20210205203919_MoviesForEveryone")]
     partial class MoviesForEveryone
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,8 +55,17 @@ namespace MoviesForEveryone.Migrations
                     b.Property<string>("experienceReview")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<float>("helpfulRatingPercent")
+                        .HasColumnType("real");
+
+                    b.Property<int>("numberHelpfulVotes")
+                        .HasColumnType("int");
+
                     b.Property<float>("reviewAvgScore")
                         .HasColumnType("real");
+
+                    b.Property<int>("totalHelpRates")
+                        .HasColumnType("int");
 
                     b.HasKey("reviewKey");
 

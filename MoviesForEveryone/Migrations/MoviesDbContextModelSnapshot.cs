@@ -53,8 +53,17 @@ namespace MoviesForEveryone.Migrations
                     b.Property<string>("experienceReview")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<float>("helpfulRatingPercent")
+                        .HasColumnType("real");
+
+                    b.Property<int>("numberHelpfulVotes")
+                        .HasColumnType("int");
+
                     b.Property<float>("reviewAvgScore")
                         .HasColumnType("real");
+
+                    b.Property<int>("totalHelpRates")
+                        .HasColumnType("int");
 
                     b.HasKey("reviewKey");
 

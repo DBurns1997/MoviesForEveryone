@@ -26,6 +26,9 @@ namespace MoviesForEveryone.Pages
             _review.experienceRating = float.Parse(Request.Form["expRate"]);
             _review.experienceReview = Request.Form["expText"].ToString();
             _review.calcAvg();
+            _review.numberHelpfulVotes = 0;
+            _review.totalHelpRates = 0;
+            _review.helpfulRatingPercent = 0;
 
             _context.Reviews.Add(_review);
             await _context.SaveChangesAsync();

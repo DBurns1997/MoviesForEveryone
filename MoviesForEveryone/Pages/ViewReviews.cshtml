@@ -3,6 +3,12 @@
 @{
 }
 
+<style>
+    table, th, td {
+        border: 1px solid black;
+    }
+</style>
+
 <table style="width:100%">
     <tr>
         <th class="cleanRate">
@@ -29,40 +35,49 @@
         <th class="arcadeReview">
             Comments on Arcade
         </th>
-        <th class="expReview">
+        <th>
             Comments on Movie Experience
         </th>
+        <th>
+            Was this review helpful?
+        </th>
     </tr>
+    @{int counter = 0; } 
     @foreach (var review in Model._reviews)
     {
-        <tr>
-            <th class="cleanRate">
+        <tr id="@counter">  <!-- Allows us to keep track of which review the user is rating the helfpulness of-->
+            <td class="cleanRate">
                 @review.cleanlinessRating;
-            </th>
-            <th class="concRate">
+            </td>
+            <td class="concRate">
                 @review.concessionsRating
-            </th>
-            <th class="arcadeRate">
+            </td>
+            <td class="arcadeRate">
                 @review.arcadeRating
-            </th>
-            <th class="expRate">
+            </td>
+            <td class="expRate">
                 @review.experienceRating
-            </th>
-            <th class="reviewAvg">
+            </td>
+            <td class="reviewAvg">
                 @review.reviewAvgScore
-            </th>
-            <th class="cleanReview">
+            </td>
+            <td class="cleanReview">
                 @review.cleanlinessReview
-            </th>
-            <th class="concReview">
+            </td>
+            <td class="concReview">
                 @review.concessionsReview
-            </th>
-            <th class="arcadeReview">
+            </td>
+            <td class="arcadeReview">
                 @review.arcadeReview
-            </th>
-            <th class="expReview">
+            </td>
+            <td class="expReview">
                 @review.experienceReview
-            </th>
+            </td>  
+            <td>                
+                <button type="submit" name=@{$"yesBttn{counter}"}>Yes</button>
+                <button type="submit" name="noBttn">No</button>
+            </td>
         </tr>
+        @counter++;      
     }
 </table>
