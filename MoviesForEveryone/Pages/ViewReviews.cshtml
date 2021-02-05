@@ -1,0 +1,68 @@
+﻿@page
+@model MoviesForEveryone.Pages.ViewReviewsModel
+@{
+}
+
+<table style="width:100%">
+    <tr>
+        <th class="cleanRate">
+           Cleanliness Rating
+        </th>
+        <th class="concRate">
+          Concessions Rating
+        </th>
+        <th class="arcadeRate">
+           Arcade Rating
+        </th>
+        <th class="expRate">
+          Movie Experience Rating
+        </th>
+        <th class="reviewAvg">
+           Average Score
+        </th>
+        <th class="cleanReview">
+           Comments on Cleanliness
+        </th>
+        <th class="concReview">
+            Comments on Concessions
+        </th>
+        <th class="arcadeReview">
+            Comments on Arcade
+        </th>
+        <th class="expReview">
+            Comments on Movie Experience
+        </th>
+    </tr>
+    @foreach (var review in Model._reviews)
+    {
+        <tr>
+            <th class="cleanRate">
+                @review.cleanlinessRating;
+            </th>
+            <th class="concRate">
+                @review.concessionsRating
+            </th>
+            <th class="arcadeRate">
+                @review.arcadeRating
+            </th>
+            <th class="expRate">
+                @review.experienceRating
+            </th>
+            <th class="reviewAvg">
+                @review.reviewAvgScore
+            </th>
+            <th class="cleanReview">
+                @review.cleanlinessReview
+            </th>
+            <th class="concReview">
+                @review.concessionsReview
+            </th>
+            <th class="arcadeReview">
+                @review.arcadeReview
+            </th>
+            <th class="expReview">
+                @review.experienceReview
+            </th>
+        </tr>
+    }
+</table>
