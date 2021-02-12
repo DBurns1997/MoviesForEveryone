@@ -11,28 +11,28 @@
 
 <table style="width:100%">
     <tr>
-        <th class="cleanRate">
+        <th>
            Cleanliness Rating
         </th>
-        <th class="concRate">
+        <th>
           Concessions Rating
         </th>
-        <th class="arcadeRate">
+        <th>
            Arcade Rating
         </th>
-        <th class="expRate">
+        <th>
           Movie Experience Rating
         </th>
-        <th class="reviewAvg">
+        <th>
            Average Score
         </th>
-        <th class="cleanReview">
+        <th >
            Comments on Cleanliness
         </th>
-        <th class="concReview">
+        <th>
             Comments on Concessions
         </th>
-        <th class="arcadeReview">
+        <th>
             Comments on Arcade
         </th>
         <th>
@@ -41,13 +41,17 @@
         <th>
             Was this review helpful?
         </th>
+        <th>
+            % Of Users That voted helpful
+        </th>
     </tr>
-    @{int counter = 0; } 
+    @{ int counter = 0; }
     @foreach (var review in Model._reviews)
     {
-        <tr id="@counter">  <!-- Allows us to keep track of which review the user is rating the helfpulness of-->
+        counter++;        
+        <tr id="">  <!-- Allows us to keep track of which review the user is rating the helfpulness of-->
             <td class="cleanRate">
-                @review.cleanlinessRating;
+                @review.cleanlinessRating
             </td>
             <td class="concRate">
                 @review.concessionsRating
@@ -73,11 +77,15 @@
             <td class="expReview">
                 @review.experienceReview
             </td>  
-            <td>                
-                <button type="submit" name=@{$"yesBttn{counter}"}>Yes</button>
-                <button type="submit" name="noBttn">No</button>
+            <td> 
+                <form method="post">
+                    <button asp-page-handler="Helpful" asp-route-buttonId="@counter">Yes</button>
+                    <button asp-page-handler="NotHelpful" asp-route-buttonId="@counter">No</button>
+                </form>                               
             </td>
-        </tr>
-        @counter++;      
+            <td>
+                @review.helpfulRatingPercent
+            </td>
+        </tr>          
     }
 </table>

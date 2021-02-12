@@ -14,6 +14,7 @@ namespace MoviesForEveryone.Pages
     {
         public void OnGet()
         {
+            showOptionsIndicator = false;
         }
 
         public async Task<IActionResult> OnGetAcquireLocation()
@@ -46,6 +47,11 @@ namespace MoviesForEveryone.Pages
              return RedirectToPage();
         }
 
+        public void OnPostOptions()
+        {
+            showOptionsIndicator = true;
+        }
+
         public string getLat()
         {
             return latitutde;
@@ -56,7 +62,13 @@ namespace MoviesForEveryone.Pages
             return longitude;
         }
 
+        public bool getOpt()
+        {
+            return showOptionsIndicator;
+        }
+
         protected string latitutde;
         protected string longitude;
+        protected bool showOptionsIndicator;
     }
 }

@@ -10,7 +10,7 @@ using MoviesForEveryone.Models;
 namespace MoviesForEveryone.Migrations
 {
     [DbContext(typeof(MoviesDbContext))]
-    [Migration("20210205203919_MoviesForEveryone")]
+    [Migration("20210209031721_MoviesForEveryone")]
     partial class MoviesForEveryone
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,38 +31,38 @@ namespace MoviesForEveryone.Migrations
                     b.Property<int?>("TheaterId")
                         .HasColumnType("int");
 
-                    b.Property<float>("arcadeRating")
-                        .HasColumnType("real");
+                    b.Property<double>("arcadeRating")
+                        .HasColumnType("float");
 
                     b.Property<string>("arcadeReview")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("cleanlinessRating")
-                        .HasColumnType("real");
+                    b.Property<double>("cleanlinessRating")
+                        .HasColumnType("float");
 
                     b.Property<string>("cleanlinessReview")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("concessionsRating")
-                        .HasColumnType("real");
+                    b.Property<double>("concessionsRating")
+                        .HasColumnType("float");
 
                     b.Property<string>("concessionsReview")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("experienceRating")
-                        .HasColumnType("real");
+                    b.Property<double>("experienceRating")
+                        .HasColumnType("float");
 
                     b.Property<string>("experienceReview")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("helpfulRatingPercent")
-                        .HasColumnType("real");
+                    b.Property<double>("helpfulRatingPercent")
+                        .HasColumnType("float");
 
                     b.Property<int>("numberHelpfulVotes")
                         .HasColumnType("int");
 
-                    b.Property<float>("reviewAvgScore")
-                        .HasColumnType("real");
+                    b.Property<double>("reviewAvgScore")
+                        .HasColumnType("float");
 
                     b.Property<int>("totalHelpRates")
                         .HasColumnType("int");

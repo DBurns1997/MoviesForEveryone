@@ -10,16 +10,16 @@ namespace MoviesForEveryone.Models
     {
         [Key]
         public int reviewKey { get; set; }
-        public float cleanlinessRating { get; set; }
-        public float concessionsRating { get; set; }
-        public float arcadeRating { get; set; }
-        public float experienceRating { get; set; }
-        public float reviewAvgScore { get; set; }
+        public double cleanlinessRating { get; set; }
+        public double concessionsRating { get; set; }
+        public double arcadeRating { get; set; }
+        public double experienceRating { get; set; }
+        public double reviewAvgScore { get; set; }
         public string cleanlinessReview { get; set;}
         public string concessionsReview { get; set; }
         public string arcadeReview { get; set; }
         public string experienceReview { get; set; }
-        public float helpfulRatingPercent { get; set; } //The percentage of people that rated the review as "Helpful"
+        public double helpfulRatingPercent { get; set; } //The percentage of people that rated the review as "Helpful"
         public int numberHelpfulVotes { get; set; } //The actual number of people who rated the reviews as "helpful"
         public int totalHelpRates { get; set; } //The total number of people who rated the review's helpfulness
         public void calcAvg()
@@ -38,7 +38,7 @@ namespace MoviesForEveryone.Models
             totalHelpRates++;           
             UpdateHelpfulRating();
         }
-        public void UpdateHelpfulRating()
+        private void UpdateHelpfulRating()
         {
            helpfulRatingPercent = (numberHelpfulVotes / totalHelpRates) * 100;
         }

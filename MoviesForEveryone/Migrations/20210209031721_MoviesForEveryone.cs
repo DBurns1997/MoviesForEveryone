@@ -29,16 +29,16 @@ namespace MoviesForEveryone.Migrations
                 {
                     reviewKey = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    cleanlinessRating = table.Column<float>(type: "real", nullable: false),
-                    concessionsRating = table.Column<float>(type: "real", nullable: false),
-                    arcadeRating = table.Column<float>(type: "real", nullable: false),
-                    experienceRating = table.Column<float>(type: "real", nullable: false),
-                    reviewAvgScore = table.Column<float>(type: "real", nullable: false),
+                    cleanlinessRating = table.Column<double>(type: "float", nullable: false),
+                    concessionsRating = table.Column<double>(type: "float", nullable: false),
+                    arcadeRating = table.Column<double>(type: "float", nullable: false),
+                    experienceRating = table.Column<double>(type: "float", nullable: false),
+                    reviewAvgScore = table.Column<double>(type: "float", nullable: false),
                     cleanlinessReview = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     concessionsReview = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     arcadeReview = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     experienceReview = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    helpfulRatingPercent = table.Column<float>(type: "real", nullable: false),
+                    helpfulRatingPercent = table.Column<double>(type: "float", nullable: false),
                     numberHelpfulVotes = table.Column<int>(type: "int", nullable: false),
                     totalHelpRates = table.Column<int>(type: "int", nullable: false),
                     TheaterId = table.Column<int>(type: "int", nullable: true)

@@ -1,15 +1,24 @@
 ﻿@page
 @model MoviesForEveryone.Pages.MapPageModel
 
-
-
 @{
     await Model.OnGetAcquireLocation();
 }
-
 <iframe 
         width="1200"
         height="900"
         frameborder="0" style="border:0"
-        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE&q=theaters+and+cinemas&center=@Model.getLat(),@Model.getLong()&zoom=12" allowfullscreen>
+        src="https://www.google.com/maps/embed/v1/search?key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE&q=theaters+and+cinemas&center=@Model.getLat(),@Model.getLong()&zoom=12" allowfullscreen>
 </iframe>
+
+<form method="post">
+    <button method="post" asp-page-handler="Options">Options</button>
+</form>
+
+
+@if (Model.getOpt() == true)
+{
+    <div>
+        Map Radius: <input type="number" min="1" max="21" />
+    </div>
+}
