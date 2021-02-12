@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Net.Http;
 
@@ -13,8 +14,9 @@ namespace MoviesForEveryone.Pages
     public class MapPageModel : PageModel
     {
         public void OnGet()
-        {
+        {            
             showOptionsIndicator = false;
+            localTheaters = new List<Models.Theater>();
         }
 
         public async Task<IActionResult> OnGetAcquireLocation()
@@ -33,7 +35,7 @@ namespace MoviesForEveryone.Pages
                         if (reader.Value.ToString() == "lat")
                         {
                             reader.Read();
-                            latitutde = reader.Value.ToString();
+                            latitude = reader.Value.ToString();
                         }
                         if (reader.Value.ToString() == "lon")
                         {
@@ -42,10 +44,34 @@ namespace MoviesForEveryone.Pages
                         }
                     }
                 }
+
+                //We can't do this unless the first API call succeeded, so it's within the first SuccessStatusCode checker
+                response = await client.GetAsync($"https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=theaters+and+cinemas&inputtype=textquery&fields=photos,formatted_address,name,opening_hours,rating&locationbias=circle:2000{latitude},{longitude}&key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE");
+                if (response.IsSuccessStatusCode)
+                {
+                    string jsonString2 = await response.Content.ReadAsStringAsync();
+                    JsonTextReader reader2 = new JsonTextReader(new StringReader(jsonString2));
+
+                    while (reader2.Read())
+                    {
+                        JsonSerializer serializer = new JsonSerializer();
+                        var theaterToken = JToken.Load(reader2);
+                        {
+                            foreach (var child in theaterToken["candidates"])
+                            {
+                                Models.Theater theaterToAdd = new Models.Theater();
+                                theaterToAdd.theaterName = child["name"].ToString();
+                                localTheaters.Add(theaterToAdd);
+                            }
+                        }
+                    }
+                }
             }
 
-             return RedirectToPage();
+            return RedirectToPage();
         }
+
+
 
         public void OnPostOptions()
         {
@@ -54,7 +80,7 @@ namespace MoviesForEveryone.Pages
 
         public string getLat()
         {
-            return latitutde;
+            return latitude;
         }
 
         public string getLong()
@@ -67,8 +93,14 @@ namespace MoviesForEveryone.Pages
             return showOptionsIndicator;
         }
 
-        protected string latitutde;
+        public List<Models.Theater> getLocalTheaters()
+        {
+            return localTheaters;
+        }
+
+        protected string latitude;
         protected string longitude;
         protected bool showOptionsIndicator;
+        protected List<Models.Theater> localTheaters;
     }
 }

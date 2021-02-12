@@ -10,6 +10,7 @@ namespace MoviesForEveryone.Models
     {
         [Key]
         public int Id { get; set; }
+        public string theaterName { get; set; }
         public float avgClean { get; set; }        
         public float avgConc { get; set; }
         public float avgArcade { get; set; }

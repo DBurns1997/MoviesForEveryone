@@ -19,6 +19,15 @@
 @if (Model.getOpt() == true)
 {
     <div>
-        Map Radius: <input type="number" min="1" max="21" />
+        Map Radius: <input type="number" min="1" max="21" /> 
     </div>
+}
+
+@foreach (Models.Theater theat in Model.getLocalTheaters())
+{
+    <table style="width:100%">
+        <tr>
+            @theat.theaterName;
+        </tr>
+    </table>
 }

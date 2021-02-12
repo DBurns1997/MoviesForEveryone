@@ -12,22 +12,22 @@
 <table style="width:100%">
     <tr>
         <th>
-           Cleanliness Rating
+            Cleanliness Rating
         </th>
         <th>
-          Concessions Rating
+            Concessions Rating
         </th>
         <th>
-           Arcade Rating
+            Arcade Rating
         </th>
         <th>
-          Movie Experience Rating
+            Movie Experience Rating
         </th>
         <th>
-           Average Score
+            Average Score
         </th>
-        <th >
-           Comments on Cleanliness
+        <th>
+            Comments on Cleanliness
         </th>
         <th>
             Comments on Concessions
@@ -48,8 +48,9 @@
     @{ int counter = 0; }
     @foreach (var review in Model._reviews)
     {
-        counter++;        
-        <tr id="">  <!-- Allows us to keep track of which review the user is rating the helfpulness of-->
+        counter++;
+        <tr id="">
+            <!-- Allows us to keep track of which review the user is rating the helfpulness of-->
             <td class="cleanRate">
                 @review.cleanlinessRating
             </td>
@@ -76,16 +77,18 @@
             </td>
             <td class="expReview">
                 @review.experienceReview
-            </td>  
-            <td> 
+            </td>
+            <td>
                 <form method="post">
                     <button asp-page-handler="Helpful" asp-route-buttonId="@counter">Yes</button>
                     <button asp-page-handler="NotHelpful" asp-route-buttonId="@counter">No</button>
-                </form>                               
+                </form>
             </td>
             <td>
                 @review.helpfulRatingPercent
             </td>
-        </tr>          
+        </tr>
+
+        <a class="navbar-brand" asp-area="" asp-page="/ReviewPage">Add a Review</a>
     }
 </table>
