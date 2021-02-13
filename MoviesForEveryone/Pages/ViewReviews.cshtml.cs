@@ -11,11 +11,9 @@ namespace MoviesForEveryone.Pages
 {
     public class ViewReviewsModel : PageModel
     {
-        public async Task OnGetAsync()
-        {
-            //TODO: Get current theater          
-            
-            _reviews = await _context.Reviews.ToListAsync(); //Change this query when theaters are added.           
+        public async Task OnGetAsync(int _theaterId)
+        {         
+            _reviews = await _context.Reviews.Where(r => r.TheaterId == _theaterId).ToListAsync();         
         }
 
         public async Task<IActionResult> OnPostHelpfulAsync(int buttonId)

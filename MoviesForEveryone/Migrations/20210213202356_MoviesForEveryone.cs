@@ -12,11 +12,12 @@ namespace MoviesForEveryone.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    avgClean = table.Column<float>(type: "real", nullable: false),
-                    avgConc = table.Column<float>(type: "real", nullable: false),
-                    avgArcade = table.Column<float>(type: "real", nullable: false),
-                    avgViewing = table.Column<float>(type: "real", nullable: false),
-                    totalAvg = table.Column<float>(type: "real", nullable: false)
+                    theaterName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    avgClean = table.Column<double>(type: "float", nullable: false),
+                    avgConc = table.Column<double>(type: "float", nullable: false),
+                    avgArcade = table.Column<double>(type: "float", nullable: false),
+                    avgViewing = table.Column<double>(type: "float", nullable: false),
+                    totalAvg = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,7 +42,7 @@ namespace MoviesForEveryone.Migrations
                     helpfulRatingPercent = table.Column<double>(type: "float", nullable: false),
                     numberHelpfulVotes = table.Column<int>(type: "int", nullable: false),
                     totalHelpRates = table.Column<int>(type: "int", nullable: false),
-                    TheaterId = table.Column<int>(type: "int", nullable: true)
+                    TheaterId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,7 +52,7 @@ namespace MoviesForEveryone.Migrations
                         column: x => x.TheaterId,
                         principalTable: "Theaters",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

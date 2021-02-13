@@ -61,6 +61,13 @@ namespace MoviesForEveryone.Pages
                             {
                                 Models.Theater theaterToAdd = new Models.Theater();
                                 theaterToAdd.theaterName = child["name"].ToString();
+                                if (!_context.Theaters.Where(t => t.theaterName == theaterToAdd.theaterName).Any()) //Add the theater to the website database if it's a new theater
+                                {                                    
+                                    _context.Theaters.Add(theaterToAdd);
+                                    await _context.SaveChangesAsync();
+                                }
+                                theaterToAdd.Id = _context.Theaters.Where(t => t.theaterName == theaterToAdd.theaterName).FirstOrDefault().Id; //For our local theaters, all we need to know is the theater name and ID to pass to the review pages                                
+                                
                                 localTheaters.Add(theaterToAdd);
                             }
                         }
@@ -70,8 +77,23 @@ namespace MoviesForEveryone.Pages
 
             return RedirectToPage();
         }
+        
+        //Check if a theater has already been reviewed at all or not
+        public bool CheckReviewed(string _theaterName)
+        {
+            bool reviewed = false;
+            if (_context.Reviews.Where(c => c.TheaterId == (_context.Theaters.Where(t => t.theaterName == _theaterName).FirstOrDefault().Id)).Any()) //If the theater specified by the name has ANY reviews...
+            {
+                reviewed = true;
+            }      
 
+            return reviewed;
+        }
 
+        public MapPageModel(Models.MoviesDbContext context)
+        {
+            _context = context;
+        }
 
         public void OnPostOptions()
         {
@@ -98,9 +120,10 @@ namespace MoviesForEveryone.Pages
             return localTheaters;
         }
 
-        protected string latitude;
-        protected string longitude;
-        protected bool showOptionsIndicator;
-        protected List<Models.Theater> localTheaters;
+        private string latitude;
+        private string longitude;
+        private bool showOptionsIndicator;
+        private List<Models.Theater> localTheaters;
+        private Models.MoviesDbContext _context;
     }
 }

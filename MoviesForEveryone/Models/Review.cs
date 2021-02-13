@@ -22,6 +22,7 @@ namespace MoviesForEveryone.Models
         public double helpfulRatingPercent { get; set; } //The percentage of people that rated the review as "Helpful"
         public int numberHelpfulVotes { get; set; } //The actual number of people who rated the reviews as "helpful"
         public int totalHelpRates { get; set; } //The total number of people who rated the review's helpfulness
+        public int TheaterId { get; set; }
         public void calcAvg()
         {
             reviewAvgScore = (cleanlinessRating + concessionsRating + experienceRating + arcadeRating) / 4;

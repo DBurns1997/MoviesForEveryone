@@ -9,9 +9,13 @@ using MoviesForEveryone.Models;
 namespace MoviesForEveryone.Pages
 {
     public class ReviewPageModel : PageModel
-    {
-        public void OnGet()
+    {        
+        [BindProperty(SupportsGet = true)]
+        public int TheaterID { get; set; }
+        public void OnGet(int theaterId)
         {
+            TheaterID = theaterId;
+            ViewData["TheaterName"] = _context.Theaters.Where(t => t.Id == theaterId).FirstOrDefault().theaterName;
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -25,16 +29,18 @@ namespace MoviesForEveryone.Pages
             _review.arcadeReview = Request.Form["arcadeText"].ToString() ;
             _review.experienceRating = float.Parse(Request.Form["expRate"]);
             _review.experienceReview = Request.Form["expText"].ToString();
+            _review.TheaterId = TheaterID;
             _review.calcAvg();
             _review.numberHelpfulVotes = 0;
             _review.totalHelpRates = 0;
-            _review.helpfulRatingPercent = 0;
+            _review.helpfulRatingPercent = 0;           
 
-            _context.Reviews.Add(_review);
+            _context.Reviews.Add(_review);           
             await _context.SaveChangesAsync();
 
             return RedirectToPage();
         }
+
 
         public ReviewPageModel(MoviesForEveryone.Models.MoviesDbContext context)
         {
@@ -42,6 +48,7 @@ namespace MoviesForEveryone.Pages
         }
 
         private readonly MoviesForEveryone.Models.MoviesDbContext _context;        
-        Review _review;
+        private Review _review;
+        private int _id;
     }
 }

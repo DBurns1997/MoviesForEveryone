@@ -1,9 +1,10 @@
-﻿@page
+﻿@page "{theaterId:int}"
 @model MoviesForEveryone.Pages.ReviewPageModel
 @{
 }
 
-<h1>Review Theater</h1>
+<h3>Review @ViewData["TheaterName"]</h3>
+@{int tryTheaterID = Model.TheaterID; }} 
 <form method="post">
     <div>
         How clean was the theater? <input type="number" name="cleanRate"> / 5
@@ -21,7 +22,6 @@
         How was your experience while watching the movie? <input type="number" name="expRate"> / 5
         <textarea name="expText" maxlength="200" size="100"></textarea>
     </div>
-
 
     <input type="submit" value="Submit Review" />
 </form>
