@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MoviesForEveryone.Models;
 using Microsoft.EntityFrameworkCore;
+using Quartz;
 
 namespace MoviesForEveryone
 {
@@ -55,6 +56,12 @@ namespace MoviesForEveryone
             {
                 endpoints.MapRazorPages();
             });
+        }
+
+        //Configure Quartz for the weekly timed movie queue
+        public IScheduler ConfigureQuartz()
+        {
+
         }
     }
 }

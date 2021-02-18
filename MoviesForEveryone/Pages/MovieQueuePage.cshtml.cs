@@ -13,16 +13,13 @@ namespace MoviesForEveryone.Pages
 {
     public class MovieQueuePageModel : PageModel
     {
-        
         public Queue<Movie> movieQueue;
 
         public void OnGet()
         {
 
         }
-
-        //Use API GET requests to populate the movie queue
-        public async Task<IActionResult> OnGetPopulateQueue()
+        public async void PopulateQueue() 
         {
             movieQueue = new Queue<Movie>();
             Random rnd = new Random();
@@ -77,7 +74,7 @@ namespace MoviesForEveryone.Pages
 
                         movieToAdd.overview = movieToken["overview"].ToString();
 
-                       
+
                     }
 
                     //Seperate API call to get the keywords for the film
@@ -108,7 +105,7 @@ namespace MoviesForEveryone.Pages
                                     }
                                 }
                             }
-                        }                        
+                        }
                     }
 
                     //Last API call to get director 
@@ -125,10 +122,10 @@ namespace MoviesForEveryone.Pages
                             {
                                 movieToAdd.movieDirectors.Add("Unknown");
                             }
-                            else 
-                            {                                
+                            else
+                            {
                                 bool director = false;
-                                foreach(var child in credsToken["crew"])
+                                foreach (var child in credsToken["crew"])
                                 {
                                     credReader.Read();
                                     if (credReader.Value != null && credReader.Value.ToString() == "known_for_department")
@@ -150,12 +147,11 @@ namespace MoviesForEveryone.Pages
                                     }
                                 }
                             }
-                        }           
+                        }
                     }
                     movieQueue.Enqueue(movieToAdd);
                 }
             }
-            return RedirectToPage();
         }
     }
 }

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "g71vT+UMInywmYwdqy2yUaseG2X6lHg3y4fPfdlddgwC/jHGKQ6QUL24eC5NxpfxxgR0klRCnmk5vk9sfnhKAw==",
+  "dgSpecHash": "BucDPJDd9gDJ2aPXQxdMOd/eaIDsbyfHtkBLl8TceP/mlnfVIdVo5YQ0yXY9M8BzqjlE2hNj3X8PGxP2GRs1Aw==",
   "success": true,
   "projectFilePath": "D:\\MoviesForEveryone\\MoviesForEveryone\\MoviesForEveryone\\MoviesForEveryone.csproj",
   "expectedPackageFiles": [
@@ -38,6 +38,7 @@
     "C:\\Users\\David\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\David\\.nuget\\packages\\quartz\\3.2.4\\quartz.3.2.4.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\runtime.native.system\\4.3.0\\runtime.native.system.4.3.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\system.collections.concurrent\\4.3.0\\system.collections.concurrent.4.3.0.nupkg.sha512",
