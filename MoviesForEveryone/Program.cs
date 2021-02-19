@@ -9,29 +9,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Quartz.Impl;
+using MoviesForEveryone.Models;
 
 namespace MoviesForEveryone
 {
     public class Program
     {
         
-        public static async void Main(string[] args)
+        public  static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
-
-            //Create the scheduler for the moviequeue
-            StdSchedulerFactory factory = new StdSchedulerFactory();
-            IScheduler scheduler = await factory.GetScheduler();
-
-            await scheduler.Start();
-
-            ////Define the job
-            //IJobDetail job = JobBuilder.Create<CreateMovieQueueJob>()
-            //    .WithIdentity("");
-            //Trigger the job to run now, and repeat every week
-
-            //Schedule the job
-                   
+            CreateQueueScheduler().GetAwaiter().GetResult(); //This allows us to call asynchronous methods from main!       
+            CreateHostBuilder(args).Build().Run();                     
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -40,5 +28,31 @@ namespace MoviesForEveryone
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
+        private static async Task<bool> CreateQueueScheduler()
+        {
+            //Create the scheduler for the moviequeue
+            StdSchedulerFactory factory = new StdSchedulerFactory();
+            //Get a scheduler
+            IScheduler scheduler = await factory.GetScheduler();
+            await scheduler.Start();
+
+            //Define the job and tie it to our PopulateMovieQueueJob class
+            IJobDetail job = JobBuilder.Create<PopulateMovieQueueJob>()
+                .WithIdentity("PopulateQueue", "group1")
+                .Build();
+
+            //Trigger the job to run now, and then every week (we're doing it daily right now just to prove that it works)
+            ITrigger trigger = TriggerBuilder.Create()
+                .WithIdentity("QueueTrigger", "group1")
+                .StartNow()
+                .WithSimpleSchedule(x => x
+                .WithIntervalInHours(24)
+                .RepeatForever())
+                .Build();
+
+            await scheduler.ScheduleJob(job, trigger);
+            return true;
+        }
     }
 }

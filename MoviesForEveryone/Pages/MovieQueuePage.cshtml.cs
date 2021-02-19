@@ -13,13 +13,13 @@ namespace MoviesForEveryone.Pages
 {
     public class MovieQueuePageModel : PageModel
     {
-        public Queue<Movie> movieQueue;
+        public static Queue<Movie> movieQueue;
 
         public void OnGet()
         {
 
         }
-        public async void PopulateQueue() 
+        public async static Task<bool> PopulateQueue() 
         {
             movieQueue = new Queue<Movie>();
             Random rnd = new Random();
@@ -152,6 +152,7 @@ namespace MoviesForEveryone.Pages
                     movieQueue.Enqueue(movieToAdd);
                 }
             }
+            return true;
         }
     }
 }

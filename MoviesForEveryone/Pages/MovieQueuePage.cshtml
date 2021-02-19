@@ -13,10 +13,16 @@
             <th>Director</th>
             <th>Description</th>
         </tr>
-        @{   foreach (var movie in Model.movieQueue)
+        @{   foreach (var movie in MovieQueuePageModel.movieQueue)
             {
                 <tr>
-                    <th>@movie.movieTitle</th>                   
+                    <th>@movie.movieTitle</th>    
+                    <th>@{ foreach (var genre in movie.genres)
+                       {
+                           @genre
+                       }
+                         }
+                    </th>
                 </tr>
             }
          }

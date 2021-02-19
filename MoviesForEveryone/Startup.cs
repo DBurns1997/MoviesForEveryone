@@ -57,11 +57,5 @@ namespace MoviesForEveryone
                 endpoints.MapRazorPages();
             });
         }
-
-        //Configure Quartz for the weekly timed movie queue
-        public IScheduler ConfigureQuartz()
-        {
-
-        }
     }
 }
