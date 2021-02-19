@@ -3,29 +3,104 @@
 @{
 
 }
-
+<style type="text/css">
+    #queueCarosuel
+    {
+        width:800px;
+        height:500px;
+        display:inline-block;
+        background-color:lightgrey;
+        outline-color:black;
+        outline-style:auto;
+    }
+</style>
+  
 <body id="background">
-  <table style="width:auto">
-        <tr>
-            <th>Title</th>
-            <th>Genres</th>
-            <th>Keywords</th>
-            <th>Director</th>
-            <th>Description</th>
-        </tr>
-        @{   foreach (var movie in MovieQueuePageModel.movieQueue)
-            {
-                <tr>
-                    <th>@movie.movieTitle</th>    
-                    <th>@{ foreach (var genre in movie.genres)
-                       {
-                           @genre
-                       }
-                         }
-                    </th>
-                </tr>
+
+
+    <div id="queueCarosuel" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#queueCarosuel" data-slide-to="0" class="active"></li>
+            @{ 
+                int counter = 1;
+                foreach (MoviesForEveryone.Models.Movie movie in MovieQueuePageModel.movieQueue)
+                {
+                    {<li data-target="#queueCarosuel" data-slide-to="@counter"></li>}
+                        counter++;
+                    }
+                }
+        </ol>
+
+        <div class="carousel-inner">
+            @{
+                counter = 0;
+                foreach (MoviesForEveryone.Models.Movie movie in MovieQueuePageModel.movieQueue)
+                {
+                    {
+                        <div class="carousel-item @(@counter == 0 ? "active" : "")">
+                            <p>Title: @movie.movieTitle</p>
+                            <p>Description: @movie.overview</p>
+                            <p>Directed By: @{ foreach (string dir in movie.movieDirectors) { dir.ToString(); } }</p>
+                            <p>Genres: @{ foreach (string genre in movie.genres) { genre.ToString(); } }</p>
+                            <p>Keywords:  @{ foreach (string keyword in movie.keywords) { keyword.ToString(); } }</p>
+                            <p>
+                                <button asp-page-handler="MarkLiked">Liked</button>
+                                <button asp-page-handler="MarkNotLiked">Didn't Like</button>
+                                <button asp-page-handler="MarkHaven'tSeen">Haven't Seen</button>
+                            </p>                            
+                        </div> 
+                    }
+                    counter++;
+                }
             }
-         }
-        
-    </table>   
+            <a class="left carousel-control" href="#queueCarousel" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#queueCarousel" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+        @*<table style="width:auto">
+                <tr>
+                    <th>Title</th>
+                    <th>Genres</th>
+                    <th>Keywords</th>
+                    <th>Director</th>
+                    <th>Description</th>
+                </tr>
+                @{ foreach (var movie in MovieQueuePageModel.movieQueue)
+                    {
+                        <tr>
+                            <th>@movie.movieTitle</th>
+                            <th>
+                                @{ foreach (var genre in movie.genres)
+                                    {
+                                        @genre.ToString();
+                                    }
+                                }
+                            </th>
+                            <th>
+                                @{ foreach (var key in movie.keywords)
+                                    {
+                                        @key.ToString();
+                                    }
+                                }
+                            </th>
+                            <th>
+                                @{ foreach (var dir in movie.movieDirectors)
+                                        @dir.ToString();
+                                }
+                            </th>
+                            <th>
+                                @movie.overview
+                            </th>
+                        </tr>
+                    }
+                }
+
+            </table>*@
 </body>
+
