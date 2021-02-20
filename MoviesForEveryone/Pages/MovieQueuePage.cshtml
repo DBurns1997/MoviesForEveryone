@@ -40,13 +40,13 @@
                         <div class="carousel-item @(@counter == 0 ? "active" : "")">
                             <p>Title: @movie.movieTitle</p>
                             <p>Description: @movie.overview</p>
-                            <p>Directed By: @{ foreach (string dir in movie.movieDirectors) { dir.ToString(); } }</p>
-                            <p>Genres: @{ foreach (string genre in movie.genres) { genre.ToString(); } }</p>
-                            <p>Keywords:  @{ foreach (string keyword in movie.keywords) { keyword.ToString(); } }</p>
+                            <p>Directed By: @foreach (string dir in movie.movieDirectors) { <span>@dir.ToString() </span> }</p>
+                            <p>Genres: @foreach (string genre in movie.genres) { <span>@genre.ToString() </span> } </p>
+                            <p>Keywords:  @foreach (string keyword in movie.keywords) { <span>@keyword.ToString() </span>} </p>
                             <p>
-                                <button asp-page-handler="MarkLiked">Liked</button>
-                                <button asp-page-handler="MarkNotLiked">Didn't Like</button>
-                                <button asp-page-handler="MarkHaven'tSeen">Haven't Seen</button>
+                                <button asp-page-handler="MarkLiked" asp-route-buttonId="@counter">Liked</button>
+                                <button asp-page-handler="MarkNotLiked" asp-route-buttonId="@counter">Didn't Like</button>
+                                <button asp-page-handler="MarkNotSeen" asp-route-buttonId="@counter">Haven't Seen</button>
                             </p>                            
                         </div> 
                     }

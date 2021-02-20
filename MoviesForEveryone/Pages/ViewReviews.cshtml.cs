@@ -43,6 +43,6 @@ namespace MoviesForEveryone.Pages
         }
 
         public IList<MoviesForEveryone.Models.Review> _reviews { get; set; }
-        private readonly MoviesForEveryone.Models.MoviesDbContext _context;        
+        private readonly MoviesDbContext _context;        
     }
 }

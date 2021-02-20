@@ -19,5 +19,11 @@ namespace MoviesForEveryone.Models
             movieDirectors = new List<string>();
         }
         public bool marked { get; set; }
+        private int apiKey { get; set; }
+
+        public void setApiKey(int key)
+        {
+            apiKey = key;
+        }
     };
 }

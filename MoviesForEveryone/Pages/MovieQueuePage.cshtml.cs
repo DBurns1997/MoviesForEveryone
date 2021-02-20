@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Linq;
 using MoviesForEveryone.Models;
 using System.IO;
 
@@ -19,7 +20,47 @@ namespace MoviesForEveryone.Pages
         {
 
         }
-        public async static Task<bool> PopulateQueue() 
+
+        public MovieQueuePageModel(MoviesDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IActionResult> OnPostMarkLikedAsync(int buttonId)
+        {
+            MovieOpinions op = new MovieOpinions();
+            op.liked = true;
+            op.movie = movieQueue.ElementAt(buttonId);
+            movieQueue.ElementAt(buttonId).marked = true;
+            //op.userId; //We're not setting the userId yet because we don't have a user system!
+            _context.Opinions.Add(op);
+
+            await _context.SaveChangesAsync();
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostMarkNotLikedAsync(int buttonId)
+        {
+            MovieOpinions op = new MovieOpinions();
+            op.liked = false;
+            op.movie = movieQueue.ElementAt(buttonId);
+            movieQueue.ElementAt(buttonId).marked = true;
+            //op.userId; //We're not setting the userId yet because we don't have a user system!
+            _context.Opinions.Add(op);
+
+            await _context.SaveChangesAsync();
+            return RedirectToPage();
+        }
+
+        //If the user hasn't seen the movie, we don't actually have to do anything except mark the movie as "Marked"
+        public async Task<IActionResult> OnPostMarkNotSeenAsync(int buttonId)
+        {
+            movieQueue.ElementAt(buttonId).marked = true;
+
+            return RedirectToPage();
+        }
+
+        public async static Task<bool> PopulateQueue()
         {
             movieQueue = new Queue<Movie>();
             Random rnd = new Random();
@@ -30,7 +71,7 @@ namespace MoviesForEveryone.Pages
 
 
             //Repeat ten times, one for each queue slot
-            //TODO: Add conditional to test is_adult
+
             for (int i = 0; i < 10; i++)
             {
                 movieToAdd = new Movie();
@@ -45,37 +86,39 @@ namespace MoviesForEveryone.Pages
                 {
                     string jsonString = await response.Content.ReadAsStringAsync();
                     JsonReader reader = new JsonTextReader(new StringReader(jsonString));
+                    JsonSerializer jsonSerializer = new JsonSerializer();
+                    var movieToken = JToken.Load(reader);
 
-                    while (reader.Read())
+                    //Check and make sure the movie isn't adult, which TMDB has for some VERY strange reason also makes sure the movie is actually titled and has genre tags, we don't want to put up untitled movies or un-genred movies
+                    while (!response.IsSuccessStatusCode || movieToken["adult"].ToString() == "true" || movieToken["title"].ToString() == "" || !movieToken["genres"].HasValues)
                     {
-                        JsonSerializer jsonSerializer = new JsonSerializer();
-                        var movieToken = JToken.Load(reader);
-                        if (!movieToken["genres"].HasValues)
-                        {
-                            movieToAdd.genres.Add("N/A");
-                        }
-                        else
-                        {
-                            foreach (var child in movieToken["genres"])
-                            {
-                                reader.Read();
-                                if (reader.Value != null)
-                                {
-                                    if (reader.Value.ToString() == "name")
-                                    {
-                                        reader.Read();
-                                        movieToAdd.genres.Add(reader.Value.ToString());
-                                    }
-                                }
-                            }
-                        }
-
-                        movieToAdd.movieTitle = movieToken["title"].ToString();
-
-                        movieToAdd.overview = movieToken["overview"].ToString();
-
-
+                        movieId = rnd.Next(1, latestID);
+                        response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}?api_key=89d7b6827e40162f83ec0bb9bccc5ee6"); //Gets a random movie from TMDB using movieID
+                        jsonString = await response.Content.ReadAsStringAsync();
+                        reader = new JsonTextReader(new StringReader(jsonString));
+                        jsonSerializer = new JsonSerializer();
+                        movieToken = JToken.Load(reader);                     
                     }
+
+                    //Put the key into the movie node so I can look at it in case strange things happen with the API call
+                    movieToAdd.setApiKey(movieId);
+
+                    //Get the movie's genres                
+                    foreach (var child in movieToken["genres"])
+                    {
+                        movieToAdd.genres.Add(child["name"].ToString());
+                    }
+
+
+                    //Get the movie's title
+                    movieToAdd.movieTitle = movieToken["title"].ToString();
+
+                    //Get the movie's description, if any.
+                    if (!movieToken["overview"].HasValues)
+                    {
+                        movieToAdd.overview = "No overview provided.";
+                    }
+                    else movieToAdd.overview = movieToken["overview"].ToString();
 
                     //Seperate API call to get the keywords for the film
                     response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}/keywords?api_key=89d7b6827e40162f83ec0bb9bccc5ee6");
@@ -83,29 +126,21 @@ namespace MoviesForEveryone.Pages
                     {
                         string jsonKeywords = await response.Content.ReadAsStringAsync();
                         JsonReader keyReader = new JsonTextReader(new StringReader(jsonKeywords));
-                        while (keyReader.Read())
+
+                        //jsonSerializer = new JsonSerializer();
+                        var keysToken = JToken.Load(keyReader);
+                        if (!keysToken["keywords"].HasValues)
                         {
-                            JsonSerializer jsonSerializer = new JsonSerializer();
-                            var keysToken = JToken.Load(keyReader);
-                            if (!keysToken["keywords"].HasValues)
+                            movieToAdd.keywords.Add("N/A");
+                        }
+                        else
+                        {
+                            foreach (var child in keysToken["keywords"])
                             {
-                                movieToAdd.keywords.Add("N/A");
-                            }
-                            else
-                            {
-                                foreach (var child in keysToken["keywords"])
-                                {
-                                    reader.Read();
-                                    if (reader.Value != null)
-                                    {
-                                        if (reader.Value.ToString() == "name")
-                                        {
-                                            movieToAdd.keywords.Add(reader.Value.ToString());
-                                        }
-                                    }
-                                }
+                                movieToAdd.keywords.Add(child["name"].ToString());
                             }
                         }
+
                     }
 
                     //Last API call to get director 
@@ -114,45 +149,31 @@ namespace MoviesForEveryone.Pages
                     {
                         string credString = await response.Content.ReadAsStringAsync();
                         JsonReader credReader = new JsonTextReader(new StringReader(credString));
-                        while (credReader.Read())
-                        {
-                            JsonSerializer jsonSerializer = new JsonSerializer();
-                            var credsToken = JToken.Load(credReader);
-                            if (!credsToken["crew"].HasValues)
-                            {
-                                movieToAdd.movieDirectors.Add("Unknown");
-                            }
-                            else
-                            {
-                                bool director = false;
-                                foreach (var child in credsToken["crew"])
-                                {
-                                    credReader.Read();
-                                    if (credReader.Value != null && credReader.Value.ToString() == "known_for_department")
-                                    {
-                                        credReader.Read();
-                                        if (credReader.Value.ToString() == "Directing")
-                                        {
-                                            director = true;
-                                        }
-                                    }
 
-                                    if (credReader.Value != null && director == true)
-                                    {
-                                        if (credReader.Value.ToString() == "name")
-                                        {
-                                            credReader.Read();
-                                            movieToAdd.movieDirectors.Add(credReader.Value.ToString());
-                                        }
-                                    }
+                        //jsonSerializer = new JsonSerializer();
+                        var credsToken = JToken.Load(credReader);
+                        if (!credsToken["crew"].HasValues)
+                        {
+                            movieToAdd.movieDirectors.Add("Unknown");
+                        }
+                        else
+                        {
+                            foreach (var child in credsToken["crew"])
+                            {
+                                if (child["known_for_department"].ToString() == "Directing")
+                                {
+                                    movieToAdd.movieDirectors.Add(child["name"].ToString());
                                 }
                             }
                         }
+
                     }
                     movieQueue.Enqueue(movieToAdd);
                 }
             }
             return true;
         }
+
+        private readonly MoviesForEveryone.Models.MoviesDbContext _context;
     }
 }
