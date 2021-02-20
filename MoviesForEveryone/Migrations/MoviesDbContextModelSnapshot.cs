@@ -18,6 +18,27 @@ namespace MoviesForEveryone.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.2");
 
+            modelBuilder.Entity("MoviesForEveryone.Models.MovieOpinions", b =>
+                {
+                    b.Property<int>("opinionKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<bool>("liked")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("movieTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("int");
+
+                    b.HasKey("opinionKey");
+
+                    b.ToTable("Opinions");
+                });
+
             modelBuilder.Entity("MoviesForEveryone.Models.Review", b =>
                 {
                     b.Property<int>("reviewKey")

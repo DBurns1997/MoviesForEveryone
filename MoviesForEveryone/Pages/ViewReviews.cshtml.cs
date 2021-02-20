@@ -30,7 +30,7 @@ namespace MoviesForEveryone.Pages
         public async Task<IActionResult> OnPostNotHelpfulAsync(int buttonId)
         {
             Review rev = _context.Reviews.Where(c => c.reviewKey == buttonId).FirstOrDefault();
-            rev.VotedNotHelpful();           
+            rev.VotedNotHelpful();
 
             await _context.SaveChangesAsync();
 

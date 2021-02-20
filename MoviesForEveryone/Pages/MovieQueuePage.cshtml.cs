@@ -30,7 +30,7 @@ namespace MoviesForEveryone.Pages
         {
             MovieOpinions op = new MovieOpinions();
             op.liked = true;
-            op.movie = movieQueue.ElementAt(buttonId);
+            op.movieTitle = movieQueue.ElementAt(buttonId).movieTitle;
             movieQueue.ElementAt(buttonId).marked = true;
             //op.userId; //We're not setting the userId yet because we don't have a user system!
             _context.Opinions.Add(op);
@@ -43,7 +43,7 @@ namespace MoviesForEveryone.Pages
         {
             MovieOpinions op = new MovieOpinions();
             op.liked = false;
-            op.movie = movieQueue.ElementAt(buttonId);
+            op.movieTitle = movieQueue.ElementAt(buttonId).movieTitle;
             movieQueue.ElementAt(buttonId).marked = true;
             //op.userId; //We're not setting the userId yet because we don't have a user system!
             _context.Opinions.Add(op);
@@ -53,11 +53,10 @@ namespace MoviesForEveryone.Pages
         }
 
         //If the user hasn't seen the movie, we don't actually have to do anything except mark the movie as "Marked"
-        public async Task<IActionResult> OnPostMarkNotSeenAsync(int buttonId)
+        public void OnPostMarkNotSeen(int buttonId)
         {
             movieQueue.ElementAt(buttonId).marked = true;
-
-            return RedirectToPage();
+            RedirectToPage();
         }
 
         public async static Task<bool> PopulateQueue()

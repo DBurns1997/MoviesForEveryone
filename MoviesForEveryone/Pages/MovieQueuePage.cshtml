@@ -43,11 +43,14 @@
                             <p>Directed By: @foreach (string dir in movie.movieDirectors) { <span>@dir.ToString() </span> }</p>
                             <p>Genres: @foreach (string genre in movie.genres) { <span>@genre.ToString() </span> } </p>
                             <p>Keywords:  @foreach (string keyword in movie.keywords) { <span>@keyword.ToString() </span>} </p>
-                            <p>
+                            @if (!movie.marked)
+                            {
+                            <form method="post">
                                 <button asp-page-handler="MarkLiked" asp-route-buttonId="@counter">Liked</button>
                                 <button asp-page-handler="MarkNotLiked" asp-route-buttonId="@counter">Didn't Like</button>
                                 <button asp-page-handler="MarkNotSeen" asp-route-buttonId="@counter">Haven't Seen</button>
-                            </p>                            
+                            </form>  
+                            }
                         </div> 
                     }
                     counter++;

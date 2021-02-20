@@ -10,7 +10,7 @@ namespace MoviesForEveryone.Models
     {
         [Key]
         public int opinionKey { get; set; }
-        public Movie movie { get; set; }
+        public string movieTitle { get; set; }
         public bool liked { get; set; }
         public int userId { get; set; }
     }

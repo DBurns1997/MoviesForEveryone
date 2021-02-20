@@ -7,6 +7,21 @@ namespace MoviesForEveryone.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Opinions",
+                columns: table => new
+                {
+                    opinionKey = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    movieTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    liked = table.Column<bool>(type: "bit", nullable: false),
+                    userId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Opinions", x => x.opinionKey);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Theaters",
                 columns: table => new
                 {
@@ -63,6 +78,9 @@ namespace MoviesForEveryone.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Opinions");
+
             migrationBuilder.DropTable(
                 name: "Reviews");
 
