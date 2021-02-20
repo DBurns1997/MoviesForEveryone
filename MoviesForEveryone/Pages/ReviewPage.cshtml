@@ -7,19 +7,19 @@
 @{int tryTheaterID = Model.TheaterID; } 
 <form method="post">
     <div>
-        How clean was the theater? <input type="number" name="cleanRate"> / 5
+        How clean was the theater? <input type="number" name="cleanRate" min="1" max="5"> / 5
         <textarea name="cleanText" maxlength="200" size="100"></textarea>
     </div>
     <div>
-        How were the concessions? <input type="number" name="concRate"> / 5
+        How were the concessions? <input type="number" name="concRate" min="1" max="5"> / 5
         <textarea name="concText" maxlength="200" size="100"></textarea>
     </div>
     <div>
-        How was the arcade? <input type="number" name="arcadeRate"> / 5
+        How was the arcade? <input type="number" name="arcadeRate" min="1" max="5"> / 5
         <textarea name="arcadeText" maxlength="200" size="100"></textarea>
     </div>
     <div>
-        How was your experience while watching the movie? <input type="number" name="expRate"> / 5
+        How was your experience while watching the movie? <input type="number" name="expRate" min="1" max="5"> / 5
         <textarea name="expText" maxlength="200" size="100"></textarea>
     </div>
 
