@@ -39,11 +39,11 @@
             @{
                 if (!Model.CheckReviewed(theat.theaterName)) //If the theater has no reviews, no point in letting the user look at them
                 {
-                   <h1> <a class="navbar-brand" asp-page="/ReviewPage" asp-area="" asp-route-theaterId="@theat.Id"> Review This Theater</a> </h1>                         
+                   <h1> <a class="navbar-brand" asp-page="/ReviewPage" asp-route-theaterId="@theat.Id"> Review This Theater</a> </h1>                         
                 }              
                 else
                 {
-                    <h1><a class="navbar-brand" asp-area=""  asp-page="/ViewReviews/@theat.Id">View This Theater's Reviews</a> </h1>
+                    <h1> <a class="navbar-brand" asp-page="/ViewReviews" asp-route-theatId="@theat.Id">View This Theater's Reviews</a> </h1>
                 }
             }
         </li>

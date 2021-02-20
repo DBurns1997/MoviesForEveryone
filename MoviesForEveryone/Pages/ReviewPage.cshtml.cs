@@ -47,7 +47,7 @@ namespace MoviesForEveryone.Pages
             _context = context;
         }
 
-        private readonly MoviesForEveryone.Models.MoviesDbContext _context;        
+        private MoviesForEveryone.Models.MoviesDbContext _context;        
         private Review _review;
         private int _id;
     }

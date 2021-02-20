@@ -1,4 +1,4 @@
-﻿@page "{theaterId:int}"
+﻿@page "{theatId:int}"
 @model MoviesForEveryone.Pages.ViewReviewsModel
 @{
 }
@@ -9,86 +9,87 @@
     }
 </style>
 
-<table style="width:100%">
-    <tr>
-        <th>
-            Cleanliness Rating
-        </th>
-        <th>
-            Concessions Rating
-        </th>
-        <th>
-            Arcade Rating
-        </th>
-        <th>
-            Movie Experience Rating
-        </th>
-        <th>
-            Average Score
-        </th>
-        <th>
-            Comments on Cleanliness
-        </th>
-        <th>
-            Comments on Concessions
-        </th>
-        <th>
-            Comments on Arcade
-        </th>
-        <th>
-            Comments on Movie Experience
-        </th>
-        <th>
-            Was this review helpful?
-        </th>
-        <th>
-            % Of Users That voted helpful
-        </th>
-    </tr>
-    @{ int counter = 0; }
-    @foreach (var review in Model._reviews)
-    {
-        counter++;
-        <tr id="">
-            <!-- Allows us to keep track of which review the user is rating the helfpulness of-->
-            <td class="cleanRate">
-                @review.cleanlinessRating
-            </td>
-            <td class="concRate">
-                @review.concessionsRating
-            </td>
-            <td class="arcadeRate">
-                @review.arcadeRating
-            </td>
-            <td class="expRate">
-                @review.experienceRating
-            </td>
-            <td class="reviewAvg">
-                @review.reviewAvgScore
-            </td>
-            <td class="cleanReview">
-                @review.cleanlinessReview
-            </td>
-            <td class="concReview">
-                @review.concessionsReview
-            </td>
-            <td class="arcadeReview">
-                @review.arcadeReview
-            </td>
-            <td class="expReview">
-                @review.experienceReview
-            </td>
-            <td>
-                <form method="post">
-                    <button asp-page-handler="Helpful" asp-route-buttonId="@counter">Yes</button>
-                    <button asp-page-handler="NotHelpful" asp-route-buttonId="@counter">No</button>
-                </form>
-            </td>
-            <td>
-                @review.helpfulRatingPercent
-            </td>
+<div>
+    <table style="width:100%">
+        <tr>
+            <th>
+                Cleanliness Rating
+            </th>
+            <th>
+                Concessions Rating
+            </th>
+            <th>
+                Arcade Rating
+            </th>
+            <th>
+                Movie Experience Rating
+            </th>
+            <th>
+                Average Score
+            </th>
+            <th>
+                Comments on Cleanliness
+            </th>
+            <th>
+                Comments on Concessions
+            </th>
+            <th>
+                Comments on Arcade
+            </th>
+            <th>
+                Comments on Movie Experience
+            </th>
+            <th>
+                Was this review helpful?
+            </th>
+            <th>
+                % Of Users That voted helpful
+            </th>
         </tr>
-
-        <a class="navbar-brand" asp-area="" asp-page="/ReviewPage">Add a Review</a>
-    }
-</table>
+        @{ int counter = 0; }
+        @foreach (var review in Model._reviews)
+        {            
+            <tr id="">
+                <!-- Allows us to keep track of which review the user is rating the helfpulness of-->
+                <td class="cleanRate">
+                    @review.cleanlinessRating
+                </td>
+                <td class="concRate">
+                    @review.concessionsRating
+                </td>
+                <td class="arcadeRate">
+                    @review.arcadeRating
+                </td>
+                <td class="expRate">
+                    @review.experienceRating
+                </td>
+                <td class="reviewAvg">
+                    @review.reviewAvgScore
+                </td>
+                <td class="cleanReview">
+                    @review.cleanlinessReview
+                </td>
+                <td class="concReview">
+                    @review.concessionsReview
+                </td>
+                <td class="arcadeReview">
+                    @review.arcadeReview
+                </td>
+                <td class="expReview">
+                    @review.experienceReview
+                </td>
+                <td>
+                    <form method="post">
+                        <button asp-page-handler="Helpful" asp-route-buttonId="@counter">Yes</button>
+                        <button asp-page-handler="NotHelpful" asp-route-buttonId="@counter">No</button>
+                    </form>
+                </td>
+                <td>
+                    @review.numberHelpfulVotes out of @review.totalHelpRates people found this review helpful.
+                </td>
+            </tr>
+            counter++;
+        }
+    </table>
+    </div>
+    <div> <a class="navbar-brand" asp-page="/ReviewPage" asp-route-theaterId="@Model.id">Add a Review</a> </div>

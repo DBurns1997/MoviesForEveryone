@@ -11,17 +11,26 @@ namespace MoviesForEveryone.Pages
 {
     public class ViewReviewsModel : PageModel
     {
-        public async Task OnGetAsync(int _theaterId)
-        {         
-            _reviews = await _context.Reviews.Where(r => r.TheaterId == _theaterId).ToListAsync();         
+        [BindProperty(SupportsGet = true)]
+        public int id { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public IList<MoviesForEveryone.Models.Review> _reviews { get; set; }
+
+        public async Task OnGetAsync(int theatId)
+        {
+            id = theatId;          
+            _reviews = await _context.Reviews.Where(r => r.TheaterId == theatId).ToListAsync();         
         }
 
         public async Task<IActionResult> OnPostHelpfulAsync(int buttonId)
         {
             //Get the review 
-            Review rev = _context.Reviews.Where(c => c.reviewKey == buttonId).FirstOrDefault();
-            rev.VotedHelpful();                                             
-           
+            Review rev = new Review();
+            int firstKey = _context.Reviews.FirstOrDefault().reviewKey;
+            rev  = _context.Reviews.Where(c => c.reviewKey == (firstKey + buttonId)).FirstOrDefault();
+            rev.VotedHelpful();
+
             await _context.SaveChangesAsync();
 
             return RedirectToPage();
@@ -29,8 +38,10 @@ namespace MoviesForEveryone.Pages
 
         public async Task<IActionResult> OnPostNotHelpfulAsync(int buttonId)
         {
-            Review rev = _context.Reviews.Where(c => c.reviewKey == buttonId).FirstOrDefault();
-            rev.VotedNotHelpful();
+            Review rev = new Review();
+            int firstKey = _context.Reviews.FirstOrDefault().reviewKey;
+            rev =  _context.Reviews.Where(c => c.reviewKey == (firstKey + buttonId)).FirstOrDefault();
+            rev.VotedNotHelpful();       
 
             await _context.SaveChangesAsync();
 
@@ -40,9 +51,8 @@ namespace MoviesForEveryone.Pages
         public ViewReviewsModel(MoviesForEveryone.Models.MoviesDbContext context)
         {
             _context = context;
-        }
-
-        public IList<MoviesForEveryone.Models.Review> _reviews { get; set; }
+        }       
+       
         private readonly MoviesDbContext _context;        
     }
 }

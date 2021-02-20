@@ -31,17 +31,11 @@ namespace MoviesForEveryone.Models
         {
             totalHelpRates++;
             numberHelpfulVotes++;
-            UpdateHelpfulRating();
         }
 
         public void VotedNotHelpful()
         {
-            totalHelpRates++;           
-            UpdateHelpfulRating();
-        }
-        private void UpdateHelpfulRating()
-        {
-           helpfulRatingPercent = (numberHelpfulVotes / totalHelpRates) * 100;
+            totalHelpRates++;    
         }
     }
 }
