@@ -21,6 +21,12 @@ namespace MoviesForEveryone.Pages
 
         public async Task<IActionResult> OnGetAcquireLocation()
         {
+            //Set our params to default            
+            showOptionsIndicator = false;
+            localTheaters = new List<Models.Theater>();
+            //Set the radius to the user's chosen radius
+            userSetRadius = _context.Settings.Where(c => c.userId == 0).FirstOrDefault().radiusSetting; //No users yet, so just get the setting
+
             float[] coords = new float[2];
             using HttpClient client = new HttpClient();
             HttpResponseMessage response = await client.GetAsync("http://ip-api.com/json/");
@@ -77,6 +83,16 @@ namespace MoviesForEveryone.Pages
 
             return RedirectToPage();
         }
+
+        public async Task<IActionResult> OnPostSetRadiusAsync()
+        {
+            MoviesForEveryone.Models.UserSettings sett = _context.Settings.Where(c => c.userId == 0).FirstOrDefault();
+            sett.radiusSetting = int.Parse(Request.Form["radiusSet"]);  
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage();
+        }
         
         //Check if a theater has already been reviewed at all or not
         public bool CheckReviewed(string _theaterName)
@@ -110,6 +126,11 @@ namespace MoviesForEveryone.Pages
             return longitude;
         }
 
+        public int getRad()
+        {
+            return userSetRadius;
+        }
+
         public bool getOpt()
         {
             return showOptionsIndicator;
@@ -123,6 +144,7 @@ namespace MoviesForEveryone.Pages
         private string latitude;
         private string longitude;
         private bool showOptionsIndicator;
+        private int userSetRadius;
         private List<Models.Theater> localTheaters;
         private Models.MoviesDbContext _context;
     }

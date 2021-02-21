@@ -18,5 +18,6 @@ namespace MoviesForEveryone.Models
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Theater> Theaters { get; set; }
         public DbSet<MovieOpinions> Opinions { get; set; }
+        public DbSet<UserSettings> Settings { get; set; }
     }
 }

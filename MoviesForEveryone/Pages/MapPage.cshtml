@@ -6,44 +6,53 @@
 }
 
 <style>
-    table, th, td {
+    .table, .th, .td {
         border: 1px solid black;
-    }
+    }   
 </style>
+
+<script>
+    function showOptions() {
+        var x = document.getElementById("optionsMenu");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+</script>
 
 <div>
     <iframe width="1200"
             height="900"
             frameborder="0" style="border:0"
-            src="https://www.google.com/maps/embed/v1/search?key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE&q=theaters+and+cinemas&center=@Model.getLat(),@Model.getLong()&zoom=12" allowfullscreen>
+            src="https://www.google.com/maps/embed/v1/search?key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE&q=theaters+and+cinemas&center=@Model.getLat(),@Model.getLong()&zoom=@Model.getRad()" allowfullscreen>
     </iframe>
 
-    <form method="post">
-        <button method="post" asp-page-handler="Options">Options</button>
-    </form>
+    <button onclick="showOptions()">Options</button>
 
+    <div class="optionsMenu" id="optionsMenu">
+        <form method="post">
+            Map Radius: <input type="number" name="radiusSet" min="1" max="21" />
+            <button asp-page-handler="SetRadius">Yes</button>
+        </form>
+    </div>
 
-    @if (Model.getOpt() == true)
-    {
-        <div>            
-            Map Radius: <input type="number" min="1" max="21" />
-        </div>        
-    }
 </div>
 
 @foreach (Models.Theater theat in Model.getLocalTheaters())
 {
-    <ol>
+    <ol class="table">
         <li>
-            @theat.theaterName  
+            @theat.theaterName
             @{
                 if (!Model.CheckReviewed(theat.theaterName)) //If the theater has no reviews, no point in letting the user look at them
                 {
-                   <h1> <a class="navbar-brand" asp-page="/ReviewPage" asp-route-theaterId="@theat.Id"> Review This Theater</a> </h1>                         
-                }              
+                    <div>  <h3> <a class="navbar-brand" asp-page="/ReviewPage" asp-route-theaterId="@theat.Id"> Review This Theater</a> </h3> </div>
+                }
                 else
                 {
-                    <h1> <a class="navbar-brand" asp-page="/ViewReviews" asp-route-theatId="@theat.Id">View This Theater's Reviews</a> </h1>
+                    <div> <h3> <a class="navbar-brand" asp-page="/ViewReviews" asp-route-theatId="@theat.Id">View This Theater's Reviews</a> </h3> </div>
                 }
             }
         </li>

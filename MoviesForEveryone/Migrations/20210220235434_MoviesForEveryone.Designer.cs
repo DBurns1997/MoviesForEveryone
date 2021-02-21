@@ -9,7 +9,7 @@ using MoviesForEveryone.Models;
 namespace MoviesForEveryone.Migrations
 {
     [DbContext(typeof(MoviesDbContext))]
-    [Migration("20210220024502_MoviesForEveryone")]
+    [Migration("20210220235434_MoviesForEveryone")]
     partial class MoviesForEveryone
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -122,6 +122,24 @@ namespace MoviesForEveryone.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Theaters");
+                });
+
+            modelBuilder.Entity("MoviesForEveryone.Models.UserSettings", b =>
+                {
+                    b.Property<int>("settingsKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("radiusSetting")
+                        .HasColumnType("int");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("int");
+
+                    b.HasKey("settingsKey");
+
+                    b.ToTable("Settings");
                 });
 
             modelBuilder.Entity("MoviesForEveryone.Models.Review", b =>

@@ -22,6 +22,20 @@ namespace MoviesForEveryone.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Settings",
+                columns: table => new
+                {
+                    settingsKey = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    radiusSetting = table.Column<int>(type: "int", nullable: false),
+                    userId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Settings", x => x.settingsKey);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Theaters",
                 columns: table => new
                 {
@@ -83,6 +97,9 @@ namespace MoviesForEveryone.Migrations
 
             migrationBuilder.DropTable(
                 name: "Reviews");
+
+            migrationBuilder.DropTable(
+                name: "Settings");
 
             migrationBuilder.DropTable(
                 name: "Theaters");

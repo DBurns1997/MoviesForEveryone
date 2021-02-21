@@ -122,6 +122,24 @@ namespace MoviesForEveryone.Migrations
                     b.ToTable("Theaters");
                 });
 
+            modelBuilder.Entity("MoviesForEveryone.Models.UserSettings", b =>
+                {
+                    b.Property<int>("settingsKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("radiusSetting")
+                        .HasColumnType("int");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("int");
+
+                    b.HasKey("settingsKey");
+
+                    b.ToTable("Settings");
+                });
+
             modelBuilder.Entity("MoviesForEveryone.Models.Review", b =>
                 {
                     b.HasOne("MoviesForEveryone.Models.Theater", null)
