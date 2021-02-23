@@ -38,7 +38,7 @@ namespace MoviesForEveryone.Pages
             _context.Reviews.Add(_review);           
             await _context.SaveChangesAsync();
 
-            return RedirectToPage();
+            return Redirect("~/ViewReviews/" + TheaterID);
         }
 
 
