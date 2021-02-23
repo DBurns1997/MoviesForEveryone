@@ -29,11 +29,32 @@ namespace MoviesForEveryone.Pages
         public async Task<IActionResult> OnPostMarkLikedAsync(int buttonId)
         {
             MovieOpinions op = new MovieOpinions();
+            
             op.liked = true;
             op.movieTitle = movieQueue.ElementAt(buttonId).movieTitle;
             movieQueue.ElementAt(buttonId).marked = true;
+           
+                        
+            foreach (var m in movieQueue)
+            {
+                if (m.movieTitle == op.movieTitle)
+                {
+                    foreach (var key in m.keywords)
+                    {
+                        if (key.ToString() != "N/A")
+                        {
+                            PositiveKeys pos = new PositiveKeys();
+                            pos.userId = 0; //Users are not implimented yet
+                            pos.keyword = key.ToString();
+                            _context.PositiveKeys.Add(pos);
+                        }
+                    }
+                }
+            }
+
             //op.userId; //We're not setting the userId yet because we don't have a user system!
             _context.Opinions.Add(op);
+            
 
             await _context.SaveChangesAsync();
             return RedirectToPage();
@@ -42,9 +63,29 @@ namespace MoviesForEveryone.Pages
         public async Task<IActionResult> OnPostMarkNotLikedAsync(int buttonId)
         {
             MovieOpinions op = new MovieOpinions();
+           
             op.liked = false;
             op.movieTitle = movieQueue.ElementAt(buttonId).movieTitle;
             movieQueue.ElementAt(buttonId).marked = true;
+            
+
+            foreach (var m in movieQueue)
+            {
+                if (m.movieTitle == op.movieTitle)
+                {
+                    foreach (var key in m.keywords)
+                    {
+                        if (key.ToString() != "N/A")
+                        {
+                            NegativeKeys neg = new NegativeKeys();
+                            neg.userID = 0; //No user system yet
+                            neg.keyword = key.ToString();
+                            _context.NegativeKeys.Add(neg);
+                        }
+                    }
+                }
+            }
+
             //op.userId; //We're not setting the userId yet because we don't have a user system!
             _context.Opinions.Add(op);
 

@@ -39,6 +39,42 @@ namespace MoviesForEveryone.Migrations
                     b.ToTable("Opinions");
                 });
 
+            modelBuilder.Entity("MoviesForEveryone.Models.NegativeKeys", b =>
+                {
+                    b.Property<int>("negativeKeyKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("keyword")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("userID")
+                        .HasColumnType("int");
+
+                    b.HasKey("negativeKeyKey");
+
+                    b.ToTable("NegativeKeys");
+                });
+
+            modelBuilder.Entity("MoviesForEveryone.Models.PositiveKeys", b =>
+                {
+                    b.Property<int>("positiveKeyKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("keyword")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("int");
+
+                    b.HasKey("positiveKeyKey");
+
+                    b.ToTable("PositiveKeys");
+                });
+
             modelBuilder.Entity("MoviesForEveryone.Models.Review", b =>
                 {
                     b.Property<int>("reviewKey")

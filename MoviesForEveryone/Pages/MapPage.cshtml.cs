@@ -14,7 +14,7 @@ namespace MoviesForEveryone.Pages
     public class MapPageModel : PageModel
     {
         public void OnGet()
-        {            
+        {
             showOptionsIndicator = false;
             localTheaters = new List<Models.Theater>();
         }
@@ -27,6 +27,9 @@ namespace MoviesForEveryone.Pages
             //Set the radius to the user's chosen radius
             userSetRadius = _context.Settings.Where(c => c.userId == 0).FirstOrDefault().radiusSetting; //No users yet, so just get the setting
 
+
+
+            //Get the boundary coords of the google maps window
             float[] coords = new float[2];
             using HttpClient client = new HttpClient();
             HttpResponseMessage response = await client.GetAsync("http://ip-api.com/json/");
@@ -51,8 +54,21 @@ namespace MoviesForEveryone.Pages
                     }
                 }
 
-                //We can't do this unless the first API call succeeded, so it's within the first SuccessStatusCode checker
-                response = await client.GetAsync($"https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=theaters+and+cinemas&inputtype=textquery&fields=photos,formatted_address,name,opening_hours,rating&locationbias=circle:2000{latitude},{longitude}&key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE");
+                //Meters in 200 miles ~= 321868
+                //Meters in 30 miles ~= 48280
+                //321868 / 21 ~= 15327
+                //MAX NUM: 15327
+                //Go from 48280 to 321868 in 21 steps of 13028
+
+                //Blame Google's bizarre embedded map sizing constraints for this!
+
+                int placeCallRadius = ((22 - userSetRadius) * 13028) - 48280;
+
+                string[] apiCallCoords = getCoords(latitude, longitude, placeCallRadius);
+
+
+                //We can't do this unless the first API call succeeded, so it's within the first SuccessStatusCode checker //rectangle:south,west|north,east
+                response = await client.GetAsync($"https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=movie+theater&inputtype=textquery&fields=photos,formatted_address,name,opening_hours,rating&locationbias=rectangle:{apiCallCoords[0]},{apiCallCoords[1]}|{apiCallCoords[2]},{apiCallCoords[3]}&key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE");
                 if (response.IsSuccessStatusCode)
                 {
                     string jsonString2 = await response.Content.ReadAsStringAsync();
@@ -68,12 +84,12 @@ namespace MoviesForEveryone.Pages
                                 Models.Theater theaterToAdd = new Models.Theater();
                                 theaterToAdd.theaterName = child["name"].ToString();
                                 if (!_context.Theaters.Where(t => t.theaterName == theaterToAdd.theaterName).Any()) //Add the theater to the website database if it's a new theater
-                                {                                    
+                                {
                                     _context.Theaters.Add(theaterToAdd);
                                     await _context.SaveChangesAsync();
                                 }
                                 theaterToAdd.Id = _context.Theaters.Where(t => t.theaterName == theaterToAdd.theaterName).FirstOrDefault().Id; //For our local theaters, all we need to know is the theater name and ID to pass to the review pages                                
-                                
+
                                 localTheaters.Add(theaterToAdd);
                             }
                         }
@@ -87,13 +103,15 @@ namespace MoviesForEveryone.Pages
         public async Task<IActionResult> OnPostSetRadiusAsync()
         {
             MoviesForEveryone.Models.UserSettings sett = _context.Settings.Where(c => c.userId == 0).FirstOrDefault();
-            sett.radiusSetting = int.Parse(Request.Form["radiusSet"]);  
+
+            int radius = int.Parse(Request.Form["radiusSet"]);
+            sett.radiusSetting = 21 - radius;
 
             await _context.SaveChangesAsync();
 
             return RedirectToPage();
         }
-        
+
         //Check if a theater has already been reviewed at all or not
         public bool CheckReviewed(string _theaterName)
         {
@@ -101,7 +119,7 @@ namespace MoviesForEveryone.Pages
             if (_context.Reviews.Where(c => c.TheaterId == (_context.Theaters.Where(t => t.theaterName == _theaterName).FirstOrDefault().Id)).Any()) //If the theater specified by the name has ANY reviews...
             {
                 reviewed = true;
-            }      
+            }
 
             return reviewed;
         }
@@ -139,6 +157,18 @@ namespace MoviesForEveryone.Pages
         public List<Models.Theater> getLocalTheaters()
         {
             return localTheaters;
+        }
+
+        private string[] getCoords(string _lat, string _long, int _radius)
+        {
+            double latDub = double.Parse(_lat);
+            double longDub = double.Parse(_long);
+            //Each degree latitude is about 69 miles, 0.0006213712 is the constant to convert meters to miles
+            double degrees = (_radius * 0.0006213712) / 69;
+
+            string[] coords = { Math.Round((latDub - degrees), 5).ToString(), Math.Round((longDub - degrees), 5).ToString(), Math.Round((latDub + degrees), 5).ToString(), Math.Round((longDub + degrees), 5).ToString() };
+
+            return coords;
         }
 
         private string latitude;

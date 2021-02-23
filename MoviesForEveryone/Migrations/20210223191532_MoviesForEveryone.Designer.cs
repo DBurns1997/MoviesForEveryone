@@ -9,7 +9,7 @@ using MoviesForEveryone.Models;
 namespace MoviesForEveryone.Migrations
 {
     [DbContext(typeof(MoviesDbContext))]
-    [Migration("20210220235434_MoviesForEveryone")]
+    [Migration("20210223191532_MoviesForEveryone")]
     partial class MoviesForEveryone
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,6 +39,42 @@ namespace MoviesForEveryone.Migrations
                     b.HasKey("opinionKey");
 
                     b.ToTable("Opinions");
+                });
+
+            modelBuilder.Entity("MoviesForEveryone.Models.NegativeKeys", b =>
+                {
+                    b.Property<int>("negativeKeyKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("keyword")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("userID")
+                        .HasColumnType("int");
+
+                    b.HasKey("negativeKeyKey");
+
+                    b.ToTable("NegativeKeys");
+                });
+
+            modelBuilder.Entity("MoviesForEveryone.Models.PositiveKeys", b =>
+                {
+                    b.Property<int>("positiveKeyKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("keyword")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("int");
+
+                    b.HasKey("positiveKeyKey");
+
+                    b.ToTable("PositiveKeys");
                 });
 
             modelBuilder.Entity("MoviesForEveryone.Models.Review", b =>

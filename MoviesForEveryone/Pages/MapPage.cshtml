@@ -3,12 +3,18 @@
 
 @{
     await Model.OnGetAcquireLocation();
+
 }
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
 <style>
+    #map {
+        height: 100%;
+    }
+
     .table, .th, .td {
         border: 1px solid black;
-    }   
+    }
 </style>
 
 <script>
@@ -21,40 +27,58 @@
         }
     }
 </script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE&callback=initMap&libraries=&v=weekly"> </script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        initMap();
+    });
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: -34.397, lng: 150.644 },
+            zoom: @Model.getRad(),
+        });
+    }
 
-<div>
-    <iframe width="1200"
-            height="900"
-            frameborder="0" style="border:0"
-            src="https://www.google.com/maps/embed/v1/search?key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE&q=theaters+and+cinemas&center=@Model.getLat(),@Model.getLong()&zoom=@Model.getRad()" allowfullscreen>
-    </iframe>
+</script>
 
-    <button onclick="showOptions()">Options</button>
+<body>
+    <div>
+        <iframe width="1200"
+                    height="900"
+                    frameborder="0" style="border:0"
+                    src="https://www.google.com/maps/embed/v1/search?key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE&q=movie+theaters&center=@Model.getLat(),@Model.getLong()&zoom=@Model.getRad()" allowfullscreen>
+            </iframe>
 
-    <div class="optionsMenu" id="optionsMenu">
-        <form method="post">
-            Map Radius: <input type="number" name="radiusSet" min="1" max="21" />
-            <button asp-page-handler="SetRadius">Yes</button>
-        </form>
+        <button onclick="showOptions()">Options</button>
+
+        <div class="optionsMenu" id="optionsMenu">
+            <form method="post">
+                Map Radius: <input type="range" name="radiusSet" min="1" max="11" />
+                <button asp-page-handler="SetRadius">Yes</button>
+            </form>
+        </div>
+
     </div>
 
-</div>
+    @foreach (Models.Theater theat in Model.getLocalTheaters())
+    {
+        <ol class="table">
+            <li>
+                @theat.theaterName
+                @{
+                    if (!Model.CheckReviewed(theat.theaterName)) //If the theater has no reviews, no point in letting the user look at them
+                    {
+                        <div>  <h3> <a class="navbar-brand" asp-page="/ReviewPage" asp-route-theaterId="@theat.Id"> Review This Theater</a> </h3> </div>
+                    }
+                    else
+                    {
+                        <div> <h3> <a class="navbar-brand" asp-page="/ViewReviews" asp-route-theatId="@theat.Id">View This Theater's Reviews</a> </h3> </div>
+                    }
+                }
+            </li>
+        </ol>
+    }
 
-@foreach (Models.Theater theat in Model.getLocalTheaters())
-{
-    <ol class="table">
-        <li>
-            @theat.theaterName
-            @{
-                if (!Model.CheckReviewed(theat.theaterName)) //If the theater has no reviews, no point in letting the user look at them
-                {
-                    <div>  <h3> <a class="navbar-brand" asp-page="/ReviewPage" asp-route-theaterId="@theat.Id"> Review This Theater</a> </h3> </div>
-                }
-                else
-                {
-                    <div> <h3> <a class="navbar-brand" asp-page="/ViewReviews" asp-route-theatId="@theat.Id">View This Theater's Reviews</a> </h3> </div>
-                }
-            }
-        </li>
-    </ol>
-}
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE&callback=initMap&libraries=&v=weekly"
+            async></script>
+</body>

@@ -7,6 +7,20 @@ namespace MoviesForEveryone.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "NegativeKeys",
+                columns: table => new
+                {
+                    negativeKeyKey = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    keyword = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    userID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NegativeKeys", x => x.negativeKeyKey);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Opinions",
                 columns: table => new
                 {
@@ -19,6 +33,20 @@ namespace MoviesForEveryone.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Opinions", x => x.opinionKey);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PositiveKeys",
+                columns: table => new
+                {
+                    positiveKeyKey = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    keyword = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    userId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PositiveKeys", x => x.positiveKeyKey);
                 });
 
             migrationBuilder.CreateTable(
@@ -93,7 +121,13 @@ namespace MoviesForEveryone.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "NegativeKeys");
+
+            migrationBuilder.DropTable(
                 name: "Opinions");
+
+            migrationBuilder.DropTable(
+                name: "PositiveKeys");
 
             migrationBuilder.DropTable(
                 name: "Reviews");
