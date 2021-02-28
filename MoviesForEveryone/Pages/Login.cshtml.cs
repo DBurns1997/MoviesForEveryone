@@ -15,7 +15,5 @@ namespace MoviesForEveryone.Pages
         {
 
         }
-
-        public void OnPost()
     }
 }

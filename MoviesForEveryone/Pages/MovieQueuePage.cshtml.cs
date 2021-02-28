@@ -24,17 +24,19 @@ namespace MoviesForEveryone.Pages
         public MovieQueuePageModel(MoviesDbContext context)
         {
             _context = context;
+            positiveKeys = _context.PositiveKeys.Where(c => c.userId == 0).ToList();
+            negativeKeys = _context.NegativeKeys.Where(c => c.userID == 0).ToList();
         }
 
         public async Task<IActionResult> OnPostMarkLikedAsync(int buttonId)
         {
             MovieOpinions op = new MovieOpinions();
-            
+
             op.liked = true;
             op.movieTitle = movieQueue.ElementAt(buttonId).movieTitle;
             movieQueue.ElementAt(buttonId).marked = true;
-           
-                        
+
+
             foreach (var m in movieQueue)
             {
                 if (m.movieTitle == op.movieTitle)
@@ -54,7 +56,7 @@ namespace MoviesForEveryone.Pages
 
             //op.userId; //We're not setting the userId yet because we don't have a user system!
             _context.Opinions.Add(op);
-            
+
 
             await _context.SaveChangesAsync();
             return RedirectToPage();
@@ -63,11 +65,11 @@ namespace MoviesForEveryone.Pages
         public async Task<IActionResult> OnPostMarkNotLikedAsync(int buttonId)
         {
             MovieOpinions op = new MovieOpinions();
-           
+
             op.liked = false;
             op.movieTitle = movieQueue.ElementAt(buttonId).movieTitle;
             movieQueue.ElementAt(buttonId).marked = true;
-            
+
 
             foreach (var m in movieQueue)
             {
@@ -130,35 +132,18 @@ namespace MoviesForEveryone.Pages
                     var movieToken = JToken.Load(reader);
 
                     //Check and make sure the movie isn't adult, which TMDB has for some VERY strange reason also makes sure the movie is actually titled and has genre tags, we don't want to put up untitled movies or un-genred movies
-                    while (!response.IsSuccessStatusCode || movieToken["adult"].ToString() == "true" || movieToken["title"].ToString() == "" || !movieToken["genres"].HasValues)
+                    while (!response.IsSuccessStatusCode || movieToken["adult"].ToString() == "true" || movieToken["title"].ToString() == "" || !movieToken["keywords"].HasValues)
                     {
                         movieId = rnd.Next(1, latestID);
                         response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}?api_key=89d7b6827e40162f83ec0bb9bccc5ee6"); //Gets a random movie from TMDB using movieID
                         jsonString = await response.Content.ReadAsStringAsync();
                         reader = new JsonTextReader(new StringReader(jsonString));
                         jsonSerializer = new JsonSerializer();
-                        movieToken = JToken.Load(reader);                     
+                        movieToken = JToken.Load(reader);
                     }
 
                     //Put the key into the movie node so I can look at it in case strange things happen with the API call
                     movieToAdd.setApiKey(movieId);
-
-                    //Get the movie's genres                
-                    foreach (var child in movieToken["genres"])
-                    {
-                        movieToAdd.genres.Add(child["name"].ToString());
-                    }
-
-
-                    //Get the movie's title
-                    movieToAdd.movieTitle = movieToken["title"].ToString();
-
-                    //Get the movie's description, if any.
-                    if (!movieToken["overview"].HasValues)
-                    {
-                        movieToAdd.overview = "No overview provided.";
-                    }
-                    else movieToAdd.overview = movieToken["overview"].ToString();
 
                     //Seperate API call to get the keywords for the film
                     response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}/keywords?api_key=89d7b6827e40162f83ec0bb9bccc5ee6");
@@ -169,51 +154,63 @@ namespace MoviesForEveryone.Pages
 
                         //jsonSerializer = new JsonSerializer();
                         var keysToken = JToken.Load(keyReader);
-                        if (!keysToken["keywords"].HasValues)
+                        foreach (var child in keysToken["keywords"])
                         {
-                            movieToAdd.keywords.Add("N/A");
+                            movieToAdd.keywords.Add(child["name"].ToString());
                         }
-                        else
-                        {
-                            foreach (var child in keysToken["keywords"])
-                            {
-                                movieToAdd.keywords.Add(child["name"].ToString());
-                            }
-                        }
-
                     }
 
-                    //Last API call to get director 
-                    response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}/credits?api_key=89d7b6827e40162f83ec0bb9bccc5ee6");
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string credString = await response.Content.ReadAsStringAsync();
-                        JsonReader credReader = new JsonTextReader(new StringReader(credString));
-
-                        //jsonSerializer = new JsonSerializer();
-                        var credsToken = JToken.Load(credReader);
-                        if (!credsToken["crew"].HasValues)
-                        {
-                            movieToAdd.movieDirectors.Add("Unknown");
-                        }
-                        else
-                        {
-                            foreach (var child in credsToken["crew"])
-                            {
-                                if (child["known_for_department"].ToString() == "Directing")
-                                {
-                                    movieToAdd.movieDirectors.Add(child["name"].ToString());
-                                }
-                            }
-                        }
-
-                    }
-                    movieQueue.Enqueue(movieToAdd);
                 }
+
+                //Get the movie's genres                
+                foreach (var child in movieToken["genres"])
+                {
+                    movieToAdd.genres.Add(child["name"].ToString());
+                }
+
+                //Get the movie's title
+                movieToAdd.movieTitle = movieToken["title"].ToString();
+
+                //Get the movie's description, if any.
+                if (!movieToken["overview"].HasValues)
+                {
+                    movieToAdd.overview = "No overview provided.";
+                }
+                else movieToAdd.overview = movieToken["overview"].ToString();
+
+                //Last API call to get director 
+                response = await client.GetAsync($"https://api.themoviedb.org/3/movie/{movieId}/credits?api_key=89d7b6827e40162f83ec0bb9bccc5ee6");
+                if (response.IsSuccessStatusCode)
+                {
+                    string credString = await response.Content.ReadAsStringAsync();
+                    JsonReader credReader = new JsonTextReader(new StringReader(credString));
+
+                    //jsonSerializer = new JsonSerializer();
+                    var credsToken = JToken.Load(credReader);
+                    if (!credsToken["crew"].HasValues)
+                    {
+                        movieToAdd.movieDirectors.Add("Unknown");
+                    }
+                    else
+                    {
+                        foreach (var child in credsToken["crew"])
+                        {
+                            if (child["known_for_department"].ToString() == "Directing")
+                            {
+                                movieToAdd.movieDirectors.Add(child["name"].ToString());
+                            }
+                        }
+                    }
+
+                }
+                movieQueue.Enqueue(movieToAdd);
             }
+        }
             return true;
         }
 
-        private readonly MoviesForEveryone.Models.MoviesDbContext _context;
-    }
+    private readonly MoviesForEveryone.Models.MoviesDbContext _context;
+    private List<PositiveKeys> positiveKeys;
+    private List<NegativeKeys> negativeKeys;
+}
 }

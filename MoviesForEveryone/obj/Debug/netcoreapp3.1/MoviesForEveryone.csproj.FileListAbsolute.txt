@@ -87,3 +87,9 @@ D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\bin\Debug\netcoreapp3.1
 D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\obj\Debug\netcoreapp3.1\Razor\Pages\ViewReviews.cshtml.g.cs
 D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\obj\Debug\netcoreapp3.1\Razor\Pages\ViewTheater.cshtml.g.cs
 D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\bin\Debug\netcoreapp3.1\Quartz.dll
+D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\bin\Debug\netcoreapp3.1\EntityFramework.SqlServer.dll
+D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\bin\Debug\netcoreapp3.1\EntityFramework.dll
+D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\bin\Debug\netcoreapp3.1\Microsoft.AspNet.Identity.Core.dll
+D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\bin\Debug\netcoreapp3.1\Microsoft.AspNet.Identity.EntityFramework.dll
+D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\obj\Debug\netcoreapp3.1\Razor\Pages\Login.cshtml.g.cs
+D:\MoviesForEveryone\MoviesForEveryone\MoviesForEveryone\obj\Debug\netcoreapp3.1\Razor\Pages\Register.cshtml.g.cs
