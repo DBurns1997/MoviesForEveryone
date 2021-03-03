@@ -2,24 +2,24 @@ using Microsoft.AspNetCore.Hosting;
 using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Quartz;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Quartz.Impl;
 using MoviesForEveryone.Models;
+using Quartz;
+using Quartz.Impl;
 
 namespace MoviesForEveryone
 {
     public class Program
     {
-        
-        public  static void Main(string[] args)
-        {
-            CreateQueueScheduler().GetAwaiter().GetResult(); //This allows us to call asynchronous methods from main!       
-            CreateHostBuilder(args).Build().Run();                     
+
+        public static void Main(string[] args)
+        {           
+            CreateQueueScheduler().GetAwaiter().GetResult(); //This allows us to call asynchronous methods from onGet
+            CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -55,4 +55,5 @@ namespace MoviesForEveryone
             return true;
         }
     }
+       
 }

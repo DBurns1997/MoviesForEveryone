@@ -9,8 +9,8 @@ namespace MoviesForEveryone.Models
 {
     public class PopulateMovieQueueJob : IJob
     {
-        public async Task Execute(IJobExecutionContext context)
-        {
+       public async Task Execute(IJobExecutionContext context)
+        {           
             await MovieQueuePageModel.PopulateQueue();
         }
     }

@@ -16,8 +16,8 @@
 </style>
   
 <body id="background">
-
-
+    @if (MovieQueuePageModel.queueComplete == true)
+    {
     <div id="queueCarosuel" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
             <li data-target="#queueCarosuel" data-slide-to="0" class="active"></li>
@@ -26,8 +26,8 @@
                 foreach (MoviesForEveryone.Models.Movie movie in MovieQueuePageModel.movieQueue)
                 {
                     {<li data-target="#queueCarosuel" data-slide-to="@counter"></li>}
-                        counter++;
-                    }
+                    counter++;
+                }
                 }
         </ol>
 
@@ -40,9 +40,12 @@
                         <div class="carousel-item @(@counter == 0 ? "active" : "")">
                             <p>Title: @movie.movieTitle</p>
                             <p>Description: @movie.overview</p>
-                            <p>Directed By: @foreach (string dir in movie.movieDirectors) { <span>@dir.ToString() </span> }</p>
-                            <p>Genres: @foreach (string genre in movie.genres) { <span>@genre.ToString() </span> } </p>
-                            <p>Keywords:  @foreach (string keyword in movie.keywords) { <span>@keyword.ToString() </span>} </p>
+                            <p>Directed By: @foreach (string dir in movie.movieDirectors)
+                            { <span>@dir.ToString() </span> }</p>
+                            <p>Genres: @foreach (string genre in movie.genres)
+                            { <span>@genre.ToString() </span> } </p>
+                            <p>Keywords:  @foreach (string keyword in movie.keywords)
+                            { <span>@keyword.ToString() </span>} </p>
                             @if (!movie.marked)
                             {
                             <form method="post">
@@ -65,5 +68,7 @@
                 <span class="sr-only">Next</span>
             </a>
         </div>
-    </div>       
+    </div>    
+    }
+   
 </body>
