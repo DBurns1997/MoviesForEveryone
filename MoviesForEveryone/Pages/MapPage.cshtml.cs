@@ -16,7 +16,7 @@ namespace MoviesForEveryone.Pages
         public void OnGet()
         {
             showOptionsIndicator = false;
-            localTheaters = new List<Models.Theater>();
+            localTheaters = new List<Models.Theater>();           
         }
 
         public async Task<IActionResult> OnGetAcquireLocation()
@@ -24,10 +24,9 @@ namespace MoviesForEveryone.Pages
             //Set our params to default            
             showOptionsIndicator = false;
             localTheaters = new List<Models.Theater>();
+            city = _context.Settings.Where(u => u.userId == 0).FirstOrDefault().setCity;
             //Set the radius to the user's chosen radius
             userSetRadius = _context.Settings.Where(c => c.userId == 0).FirstOrDefault().radiusSetting; //No users yet, so just get the setting
-
-
 
             //Get the boundary coords of the google maps window
             float[] coords = new float[2];
@@ -68,7 +67,15 @@ namespace MoviesForEveryone.Pages
 
 
                 //We can't do this unless the first API call succeeded, so it's within the first SuccessStatusCode checker //rectangle:south,west|north,east
-                response = await client.GetAsync($"https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=movie+theater&inputtype=textquery&fields=photos,formatted_address,name,opening_hours,rating&locationbias=rectangle:{apiCallCoords[0]},{apiCallCoords[1]}|{apiCallCoords[2]},{apiCallCoords[3]}&key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE");
+                if (city == null)
+                {
+                    response = await client.GetAsync($"https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=movie+theater&inputtype=textquery&fields=photos,formatted_address,name,opening_hours,rating&locationbias=rectangle:{apiCallCoords[0]},{apiCallCoords[1]}|{apiCallCoords[2]},{apiCallCoords[3]}&key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE");
+                }
+                else
+                {
+                    response = await client.GetAsync($"https://maps.googleapis.com/maps/api/place/textsearch/json?input=movie_theaters_in_{city}&inputtype=textquery&fields=photos,formatted_address,name,opening_hours,rating&locationbias=&key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE");
+                }
+
                 if (response.IsSuccessStatusCode)
                 {
                     string jsonString2 = await response.Content.ReadAsStringAsync();
@@ -79,7 +86,16 @@ namespace MoviesForEveryone.Pages
                         JsonSerializer serializer = new JsonSerializer();
                         var theaterToken = JToken.Load(reader2);
                         {
-                            foreach (var child in theaterToken["candidates"])
+                            string apiNodeString;
+                            if (city == null)
+                            {
+                                apiNodeString = "candidates";
+                            }
+                            else
+                            {
+                                apiNodeString = "results";
+                            }
+                            foreach (var child in theaterToken[apiNodeString])
                             {
                                 Models.Theater theaterToAdd = new Models.Theater();
                                 theaterToAdd.theaterName = child["name"].ToString();
@@ -112,6 +128,15 @@ namespace MoviesForEveryone.Pages
             return RedirectToPage();
         }
 
+        public async void OnPostSetSearchCity()
+        {
+            MoviesForEveryone.Models.UserSettings setting = _context.Settings.Where(u => u.userId == 0).FirstOrDefault(); //RESET WHEN USERS ARE IMPLEMENTED
+            city = Request.Form["cityName"].ToString();
+            setting.setCity = city;
+
+            await _context.SaveChangesAsync();
+        }
+
         //Check if a theater has already been reviewed at all or not
         public bool CheckReviewed(string _theaterName)
         {
@@ -122,6 +147,11 @@ namespace MoviesForEveryone.Pages
             }
 
             return reviewed;
+        }
+
+        public bool CitySet()
+        {            
+            return (_context.Settings.Where(u => u.userId == 0).FirstOrDefault().setCity != null);
         }
 
         public MapPageModel(Models.MoviesDbContext context)
@@ -154,6 +184,11 @@ namespace MoviesForEveryone.Pages
             return showOptionsIndicator;
         }
 
+        public string getCity()
+        {
+            return city;
+        }
+
         public List<Models.Theater> getLocalTheaters()
         {
             return localTheaters;
@@ -171,6 +206,7 @@ namespace MoviesForEveryone.Pages
             return coords;
         }
 
+        private string city;
         private string latitude;
         private string longitude;
         private bool showOptionsIndicator;

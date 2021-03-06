@@ -2,3 +2,22 @@
 @model MoviesForEveryone.Pages.RegisterModel
 @{
 }
+
+<html>
+<head>
+    <title>Register</title>
+    <style>
+        body {
+            font: 0.9em Calibri;
+        }
+    </style>
+</head>
+
+<body>
+    <form method="post">
+        User Name:
+       <input type="text" />
+        <button asp-page-handler="Register"></button>
+    </form>
+</body>
+</html>

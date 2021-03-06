@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MoviesForEveryone.Migrations
 {
-    public partial class MoviesForEveryoneContext : Migration
+    public partial class MoviesForEveryone : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -22,81 +22,14 @@ namespace MoviesForEveryone.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "NegativeKeys",
-                columns: table => new
-                {
-                    negativeKeyKey = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    keyword = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    userID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_NegativeKeys", x => x.negativeKeyKey);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Opinions",
-                columns: table => new
-                {
-                    opinionKey = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    movieTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    liked = table.Column<bool>(type: "bit", nullable: false),
-                    userId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Opinions", x => x.opinionKey);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PositiveKeys",
-                columns: table => new
-                {
-                    positiveKeyKey = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    keyword = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    userId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PositiveKeys", x => x.positiveKeyKey);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Settings",
                 columns: table => new
                 {
                     settingsKey = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     radiusSetting = table.Column<int>(type: "int", nullable: false),
-                    userId = table.Column<int>(type: "int", nullable: false)
+                    userId = table.Column<int>(type: "int", nullable: false),
+                    setCity = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -138,6 +71,69 @@ namespace MoviesForEveryone.Migrations
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    settingsKey = table.Column<int>(type: "int", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Settings_settingsKey",
+                        column: x => x.settingsKey,
+                        principalTable: "Settings",
+                        principalColumn: "settingsKey",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reviews",
+                columns: table => new
+                {
+                    reviewKey = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    cleanlinessRating = table.Column<double>(type: "float", nullable: false),
+                    concessionsRating = table.Column<double>(type: "float", nullable: false),
+                    arcadeRating = table.Column<double>(type: "float", nullable: false),
+                    experienceRating = table.Column<double>(type: "float", nullable: false),
+                    reviewAvgScore = table.Column<double>(type: "float", nullable: false),
+                    cleanlinessReview = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    concessionsReview = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    arcadeReview = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    experienceReview = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    helpfulRatingPercent = table.Column<double>(type: "float", nullable: false),
+                    numberHelpfulVotes = table.Column<int>(type: "int", nullable: false),
+                    totalHelpRates = table.Column<int>(type: "int", nullable: false),
+                    TheaterId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reviews", x => x.reviewKey);
+                    table.ForeignKey(
+                        name: "FK_Reviews_Theaters_TheaterId",
+                        column: x => x.TheaterId,
+                        principalTable: "Theaters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -228,34 +224,67 @@ namespace MoviesForEveryone.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reviews",
+                name: "NegativeKeys",
                 columns: table => new
                 {
-                    reviewKey = table.Column<int>(type: "int", nullable: false)
+                    negativeKeyKey = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    cleanlinessRating = table.Column<double>(type: "float", nullable: false),
-                    concessionsRating = table.Column<double>(type: "float", nullable: false),
-                    arcadeRating = table.Column<double>(type: "float", nullable: false),
-                    experienceRating = table.Column<double>(type: "float", nullable: false),
-                    reviewAvgScore = table.Column<double>(type: "float", nullable: false),
-                    cleanlinessReview = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    concessionsReview = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    arcadeReview = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    experienceReview = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    helpfulRatingPercent = table.Column<double>(type: "float", nullable: false),
-                    numberHelpfulVotes = table.Column<int>(type: "int", nullable: false),
-                    totalHelpRates = table.Column<int>(type: "int", nullable: false),
-                    TheaterId = table.Column<int>(type: "int", nullable: false)
+                    keyword = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    userID = table.Column<int>(type: "int", nullable: false),
+                    MFEUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reviews", x => x.reviewKey);
+                    table.PrimaryKey("PK_NegativeKeys", x => x.negativeKeyKey);
                     table.ForeignKey(
-                        name: "FK_Reviews_Theaters_TheaterId",
-                        column: x => x.TheaterId,
-                        principalTable: "Theaters",
+                        name: "FK_NegativeKeys_AspNetUsers_MFEUserId",
+                        column: x => x.MFEUserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Opinions",
+                columns: table => new
+                {
+                    opinionKey = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    movieTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    liked = table.Column<bool>(type: "bit", nullable: false),
+                    userId = table.Column<int>(type: "int", nullable: false),
+                    MFEUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Opinions", x => x.opinionKey);
+                    table.ForeignKey(
+                        name: "FK_Opinions_AspNetUsers_MFEUserId",
+                        column: x => x.MFEUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PositiveKeys",
+                columns: table => new
+                {
+                    positiveKeyKey = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    keyword = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    userId = table.Column<int>(type: "int", nullable: false),
+                    MFEUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PositiveKeys", x => x.positiveKeyKey);
+                    table.ForeignKey(
+                        name: "FK_PositiveKeys_AspNetUsers_MFEUserId",
+                        column: x => x.MFEUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -291,11 +320,31 @@ namespace MoviesForEveryone.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_settingsKey",
+                table: "AspNetUsers",
+                column: "settingsKey");
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NegativeKeys_MFEUserId",
+                table: "NegativeKeys",
+                column: "MFEUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Opinions_MFEUserId",
+                table: "Opinions",
+                column: "MFEUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PositiveKeys_MFEUserId",
+                table: "PositiveKeys",
+                column: "MFEUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_TheaterId",
@@ -333,9 +382,6 @@ namespace MoviesForEveryone.Migrations
                 name: "Reviews");
 
             migrationBuilder.DropTable(
-                name: "Settings");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -343,6 +389,9 @@ namespace MoviesForEveryone.Migrations
 
             migrationBuilder.DropTable(
                 name: "Theaters");
+
+            migrationBuilder.DropTable(
+                name: "Settings");
         }
     }
 }

@@ -202,6 +202,9 @@ namespace MoviesForEveryone.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<int?>("settingsKey")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -212,6 +215,8 @@ namespace MoviesForEveryone.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("settingsKey");
+
                     b.ToTable("AspNetUsers");
                 });
 
@@ -221,6 +226,9 @@ namespace MoviesForEveryone.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .UseIdentityColumn();
+
+                    b.Property<string>("MFEUserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("liked")
                         .HasColumnType("bit");
@@ -233,6 +241,8 @@ namespace MoviesForEveryone.Migrations
 
                     b.HasKey("opinionKey");
 
+                    b.HasIndex("MFEUserId");
+
                     b.ToTable("Opinions");
                 });
 
@@ -243,6 +253,9 @@ namespace MoviesForEveryone.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<string>("MFEUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("keyword")
                         .HasColumnType("nvarchar(max)");
 
@@ -250,6 +263,8 @@ namespace MoviesForEveryone.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("negativeKeyKey");
+
+                    b.HasIndex("MFEUserId");
 
                     b.ToTable("NegativeKeys");
                 });
@@ -261,6 +276,9 @@ namespace MoviesForEveryone.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<string>("MFEUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("keyword")
                         .HasColumnType("nvarchar(max)");
 
@@ -268,6 +286,8 @@ namespace MoviesForEveryone.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("positiveKeyKey");
+
+                    b.HasIndex("MFEUserId");
 
                     b.ToTable("PositiveKeys");
                 });
@@ -365,6 +385,9 @@ namespace MoviesForEveryone.Migrations
                     b.Property<int>("radiusSetting")
                         .HasColumnType("int");
 
+                    b.Property<string>("setCity")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("userId")
                         .HasColumnType("int");
 
@@ -424,6 +447,36 @@ namespace MoviesForEveryone.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MoviesForEveryone.Models.MFEUser", b =>
+                {
+                    b.HasOne("MoviesForEveryone.Models.UserSettings", "settings")
+                        .WithMany()
+                        .HasForeignKey("settingsKey");
+
+                    b.Navigation("settings");
+                });
+
+            modelBuilder.Entity("MoviesForEveryone.Models.MovieOpinions", b =>
+                {
+                    b.HasOne("MoviesForEveryone.Models.MFEUser", null)
+                        .WithMany("opinions")
+                        .HasForeignKey("MFEUserId");
+                });
+
+            modelBuilder.Entity("MoviesForEveryone.Models.NegativeKeys", b =>
+                {
+                    b.HasOne("MoviesForEveryone.Models.MFEUser", null)
+                        .WithMany("negativeKeys")
+                        .HasForeignKey("MFEUserId");
+                });
+
+            modelBuilder.Entity("MoviesForEveryone.Models.PositiveKeys", b =>
+                {
+                    b.HasOne("MoviesForEveryone.Models.MFEUser", null)
+                        .WithMany("positiveKeys")
+                        .HasForeignKey("MFEUserId");
+                });
+
             modelBuilder.Entity("MoviesForEveryone.Models.Review", b =>
                 {
                     b.HasOne("MoviesForEveryone.Models.Theater", null)
@@ -431,6 +484,15 @@ namespace MoviesForEveryone.Migrations
                         .HasForeignKey("TheaterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MoviesForEveryone.Models.MFEUser", b =>
+                {
+                    b.Navigation("negativeKeys");
+
+                    b.Navigation("opinions");
+
+                    b.Navigation("positiveKeys");
                 });
 
             modelBuilder.Entity("MoviesForEveryone.Models.Theater", b =>

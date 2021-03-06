@@ -43,12 +43,26 @@
 
 <body>
     <div>
-        <iframe width="1200"
+        <form method="post">
+            Please enter the name of the city you would like to search for theaters in: <input name="cityName" type="text" maxlength="25" /> <button asp-page-handler="SetSearchCity">Submit</button>
+        </form>
+        @if (Model.CitySet())
+        {
+            <iframe width="1200"
                     height="900"
                     frameborder="0" style="border:0"
-                    src="https://www.google.com/maps/embed/v1/search?key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE&q=movie+theaters&center=@Model.getLat(),@Model.getLong()&zoom=@Model.getRad()" allowfullscreen>
+                    src="https://www.google.com/maps/embed/v1/search?key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE&q=movie+theaters_in_{@Model.getCity()}&zoom=@Model.getRad()" allowfullscreen>
             </iframe>
-
+        }
+        else
+        {
+            <iframe width="1200"
+                    height="900"
+                    frameborder="0" style="border:0"
+                    src="https://www.google.com/maps/embed/v1/search?key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE&q=movie+theaters_in_{@Model.getCity()}&center=@Model.getLat(),@Model.getLong()&zoom=@Model.getRad()" allowfullscreen>
+            </iframe>
+            <!--src="https://www.google.com/maps/embed/v1/search?key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE&q=movie+theaters_in_{@Model.getCity()}&center=@Model.getLat(),@Model.getLong()&zoom=@Model.getRad()" allowfullscreen> -->
+        }
         <button onclick="showOptions()">Options</button>
 
         <div class="optionsMenu" id="optionsMenu">
