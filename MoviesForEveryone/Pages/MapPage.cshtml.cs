@@ -8,9 +8,11 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Net.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MoviesForEveryone.Pages
 {
+   
     public class MapPageModel : PageModel
     {
         public void OnGet()
@@ -24,10 +26,15 @@ namespace MoviesForEveryone.Pages
             //Set our params to default            
             showOptionsIndicator = false;
             localTheaters = new List<Models.Theater>();
-            city = _context.Settings.Where(u => u.userId == 0).FirstOrDefault().setCity;
-            //Set the radius to the user's chosen radius
-            userSetRadius = _context.Settings.Where(c => c.userId == 0).FirstOrDefault().radiusSetting; //No users yet, so just get the setting
 
+            if (city == null)
+            {
+                city = _context.Settings.Where(u => u.userId == 0).FirstOrDefault().setCity;
+            }
+            //Set the radius to the user's chosen radius
+
+            userSetRadius = _context.Settings.Where(c => c.userId == 0).FirstOrDefault().radiusSetting; //No users yet, so just get the setting
+            
             //Get the boundary coords of the google maps window
             float[] coords = new float[2];
             using HttpClient client = new HttpClient();
@@ -73,7 +80,7 @@ namespace MoviesForEveryone.Pages
                 }
                 else
                 {
-                    response = await client.GetAsync($"https://maps.googleapis.com/maps/api/place/textsearch/json?input=movie_theaters_in_{city}&inputtype=textquery&fields=photos,formatted_address,name,opening_hours,rating&locationbias=&key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE");
+                    response = await client.GetAsync($"https://maps.googleapis.com/maps/api/place/textsearch/json?input=movie_theaters_{city}&inputtype=textquery&fields=photos,formatted_address,name,opening_hours,rating&locationbias=&key=AIzaSyCKVHJorOdRlgIFOEC9gZ4AJ2WAXrlligE");
                 }
 
                 if (response.IsSuccessStatusCode)
@@ -150,8 +157,8 @@ namespace MoviesForEveryone.Pages
         }
 
         public bool CitySet()
-        {            
-            return (_context.Settings.Where(u => u.userId == 0).FirstOrDefault().setCity != null);
+        {          
+            return ( city != null);
         }
 
         public MapPageModel(Models.MoviesDbContext context)

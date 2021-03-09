@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
+
 namespace MoviesForEveryone.Models
 {
     public class MovieOpinions

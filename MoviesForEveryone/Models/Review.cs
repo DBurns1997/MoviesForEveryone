@@ -12,7 +12,7 @@ namespace MoviesForEveryone.Models
         public int reviewKey { get; set; }
         public double cleanlinessRating { get; set; }
         public double concessionsRating { get; set; }
-        public double arcadeRating { get; set; }
+        public double? arcadeRating { get; set; }
         public double experienceRating { get; set; }
         public double reviewAvgScore { get; set; }
         public string cleanlinessReview { get; set;}
@@ -25,7 +25,16 @@ namespace MoviesForEveryone.Models
         public int TheaterId { get; set; }
         public void calcAvg()
         {
-            reviewAvgScore = (cleanlinessRating + concessionsRating + experienceRating + arcadeRating) / 4;
+            double _arcadeRating = 0;
+            if (arcadeRating ==  null)
+            {
+                _arcadeRating = 0;
+            }
+            else
+            {
+                _arcadeRating = (double)arcadeRating;   
+            }
+            reviewAvgScore = (cleanlinessRating + concessionsRating + experienceRating + _arcadeRating) / 4;
         }
         public void VotedHelpful()
         {

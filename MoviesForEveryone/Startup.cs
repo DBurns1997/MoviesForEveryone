@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,7 @@ namespace MoviesForEveryone
         {
             services.AddDbContext<MoviesDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddIdentity<MFEUser, IdentityRole>().AddEntityFrameworkStores<MoviesDbContext>();
             services.AddRazorPages();            
         }
 
@@ -50,7 +52,8 @@ namespace MoviesForEveryone
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();            
 
             app.UseEndpoints(endpoints =>
             {
