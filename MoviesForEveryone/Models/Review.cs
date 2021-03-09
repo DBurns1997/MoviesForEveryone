@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace MoviesForEveryone.Models
-{
+{    
     public class Review
     {
         [Key]

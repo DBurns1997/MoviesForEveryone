@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MoviesForEveryone.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MoviesForEveryone.Pages
 {
+    [Authorize]
     public class ViewReviewsModel : PageModel
     {
         [BindProperty(SupportsGet = true)]
