@@ -115,7 +115,7 @@ namespace MoviesForEveryone.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     cleanlinessRating = table.Column<double>(type: "float", nullable: false),
                     concessionsRating = table.Column<double>(type: "float", nullable: false),
-                    arcadeRating = table.Column<double>(type: "float", nullable: false),
+                    arcadeRating = table.Column<double>(type: "float", nullable: true),
                     experienceRating = table.Column<double>(type: "float", nullable: false),
                     reviewAvgScore = table.Column<double>(type: "float", nullable: false),
                     cleanlinessReview = table.Column<string>(type: "nvarchar(max)", nullable: true),

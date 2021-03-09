@@ -10,16 +10,16 @@ using MoviesForEveryone.Models;
 namespace MoviesForEveryone.Migrations
 {
     [DbContext(typeof(MoviesDbContext))]
-    [Migration("20210306184442_MoviesForEveryone")]
+    [Migration("20210309054304_MoviesForEveryone")]
     partial class MoviesForEveryone
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.3");
+                .HasAnnotation("ProductVersion", "5.0.3")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -53,7 +53,7 @@ namespace MoviesForEveryone.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -77,7 +77,7 @@ namespace MoviesForEveryone.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -227,7 +227,7 @@ namespace MoviesForEveryone.Migrations
                     b.Property<int>("opinionKey")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("MFEUserId")
                         .HasColumnType("nvarchar(450)");
@@ -253,7 +253,7 @@ namespace MoviesForEveryone.Migrations
                     b.Property<int>("negativeKeyKey")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("MFEUserId")
                         .HasColumnType("nvarchar(450)");
@@ -276,7 +276,7 @@ namespace MoviesForEveryone.Migrations
                     b.Property<int>("positiveKeyKey")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("MFEUserId")
                         .HasColumnType("nvarchar(450)");
@@ -299,12 +299,12 @@ namespace MoviesForEveryone.Migrations
                     b.Property<int>("reviewKey")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("TheaterId")
                         .HasColumnType("int");
 
-                    b.Property<double>("arcadeRating")
+                    b.Property<double?>("arcadeRating")
                         .HasColumnType("float");
 
                     b.Property<string>("arcadeReview")
@@ -352,7 +352,7 @@ namespace MoviesForEveryone.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<double>("avgArcade")
                         .HasColumnType("float");
@@ -382,7 +382,7 @@ namespace MoviesForEveryone.Migrations
                     b.Property<int>("settingsKey")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseIdentityColumn();
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("radiusSetting")
                         .HasColumnType("int");

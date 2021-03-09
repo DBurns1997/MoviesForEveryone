@@ -29,7 +29,10 @@ namespace MoviesForEveryone
         {
             services.AddDbContext<MoviesDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<MFEUser, IdentityRole>().AddEntityFrameworkStores<MoviesDbContext>();
+            services.AddIdentity<MFEUser, IdentityRole>()
+                .AddDefaultTokenProviders()
+                .AddDefaultUI()
+                .AddEntityFrameworkStores<MoviesDbContext>();            
             services.AddRazorPages();            
         }
 
