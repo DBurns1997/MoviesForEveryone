@@ -9,17 +9,23 @@ using Newtonsoft.Json.Linq;
 using System.Linq;
 using MoviesForEveryone.Models;
 using System.IO;
-
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace MoviesForEveryone.Pages
 {
+    [Authorize]
     public class MovieQueuePageModel : PageModel
-    {
+    {     
+
         public static Queue<Movie> movieQueue;
         public static bool queueComplete;
 
         public void OnGet()
         {
+            string id = HttpContext.User.Identity.Name;
+            positiveKeys = _context.PositiveKeys.Where(c => c.userId == id).ToList();
+            negativeKeys = _context.NegativeKeys.Where(c => c.userID == id).ToList();
             CheckQueueWeights();
             if (movieQueue == null)
             {
@@ -33,9 +39,7 @@ namespace MoviesForEveryone.Pages
 
         public MovieQueuePageModel(MoviesDbContext context)
         {
-            _context = context;
-            positiveKeys = _context.PositiveKeys.Where(c => c.userId == 0).ToList();
-            negativeKeys = _context.NegativeKeys.Where(c => c.userID == 0).ToList();
+            _context = context;            
         }
 
         public async Task<IActionResult> OnPostMarkLikedAsync(int buttonId)
@@ -56,7 +60,7 @@ namespace MoviesForEveryone.Pages
                         if (genre.ToString() != "N/A")
                         {
                             PositiveKeys pos = new PositiveKeys();
-                            pos.userId = 0; //Users are not implimented yet
+                            pos.userId = HttpContext.User.Identity.Name; 
                             pos.keyword = genre.ToString();
                             _context.PositiveKeys.Add(pos);
                         }
@@ -66,7 +70,7 @@ namespace MoviesForEveryone.Pages
                         if (key.ToString() != "N/A")
                         {
                             PositiveKeys pos = new PositiveKeys();
-                            pos.userId = 0; //Users are not implimented yet
+                            pos.userId = HttpContext.User.Identity.Name;
                             pos.keyword = key.ToString();                            
                             _context.PositiveKeys.Add(pos);
                         }
@@ -100,7 +104,7 @@ namespace MoviesForEveryone.Pages
                         if (genre.ToString() != "N/A")
                         {
                             PositiveKeys pos = new PositiveKeys();
-                            pos.userId = 0; //Users are not implimented yet
+                            pos.userId = HttpContext.User.Identity.Name;
                             pos.keyword = genre.ToString();
                             _context.PositiveKeys.Add(pos);
                         }
@@ -110,7 +114,7 @@ namespace MoviesForEveryone.Pages
                         if (key.ToString() != "N/A")
                         {
                             NegativeKeys neg = new NegativeKeys();
-                            neg.userID = 0; //No user system yet
+                            neg.userID = HttpContext.User.Identity.Name;
                             neg.keyword = key.ToString();
                             _context.NegativeKeys.Add(neg);
                         }
@@ -382,7 +386,6 @@ namespace MoviesForEveryone.Pages
             }      
             
         }
-
 
         private readonly MoviesDbContext _context;
         private static List<PositiveKeys> positiveKeys;

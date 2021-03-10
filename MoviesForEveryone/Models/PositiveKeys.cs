@@ -11,6 +11,6 @@ namespace MoviesForEveryone.Models
         [Key]
         public int positiveKeyKey { get; set; }
         public string keyword { get; set; }
-        public int userId { get; set; }
+        public string userId { get; set; }
     }
 }

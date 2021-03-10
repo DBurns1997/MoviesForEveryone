@@ -259,8 +259,8 @@ namespace MoviesForEveryone.Migrations
                     b.Property<string>("keyword")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("userID")
-                        .HasColumnType("int");
+                    b.Property<string>("userID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("negativeKeyKey");
 
@@ -282,8 +282,8 @@ namespace MoviesForEveryone.Migrations
                     b.Property<string>("keyword")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("userId")
-                        .HasColumnType("int");
+                    b.Property<string>("userId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("positiveKeyKey");
 
@@ -388,8 +388,8 @@ namespace MoviesForEveryone.Migrations
                     b.Property<string>("setCity")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("userId")
-                        .HasColumnType("int");
+                    b.Property<string>("userId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("settingsKey");
 

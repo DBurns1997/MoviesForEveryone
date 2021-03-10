@@ -9,12 +9,14 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Net.Http;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using MoviesForEveryone.Models;
 
 namespace MoviesForEveryone.Pages
 {
     [Authorize]
     public class MapPageModel : PageModel
-    {
+    {     
         public void OnGet()
         {
             showOptionsIndicator = false;
@@ -25,15 +27,17 @@ namespace MoviesForEveryone.Pages
         {
             //Set our params to default            
             showOptionsIndicator = false;
-            localTheaters = new List<Models.Theater>();
+            localTheaters = new List<Models.Theater>();           
+            string userId = HttpContext.User.Identity.Name;
+            UserSettings settings = _context.Settings.Where(c => c.userId == userId).FirstOrDefault();
 
-            if (city == null)
+            if (city == null && settings.setCity != null)
             {
-                city = _context.Settings.Where(u => u.userId == 0).FirstOrDefault().setCity;
+                city = _context.Settings.Where(u => u.userId == userId).FirstOrDefault().setCity;
             }
-            //Set the radius to the user's chosen radius
 
-            userSetRadius = _context.Settings.Where(c => c.userId == 0).FirstOrDefault().radiusSetting; //No users yet, so just get the setting
+            //Set the radius to the user's chosen radius
+            userSetRadius = settings.radiusSetting;
             
             //Get the boundary coords of the google maps window
             float[] coords = new float[2];
@@ -125,7 +129,8 @@ namespace MoviesForEveryone.Pages
 
         public async Task<IActionResult> OnPostSetRadiusAsync()
         {
-            MoviesForEveryone.Models.UserSettings sett = _context.Settings.Where(c => c.userId == 0).FirstOrDefault();
+            string id = HttpContext.User.Identity.Name;
+            MoviesForEveryone.Models.UserSettings sett = _context.Settings.Where(c => c.userId == id).FirstOrDefault();
 
             int radius = int.Parse(Request.Form["radiusSet"]);
             sett.radiusSetting = 21 - radius;
@@ -137,7 +142,8 @@ namespace MoviesForEveryone.Pages
 
         public async void OnPostSetSearchCity()
         {
-            MoviesForEveryone.Models.UserSettings setting = _context.Settings.Where(u => u.userId == 0).FirstOrDefault(); //RESET WHEN USERS ARE IMPLEMENTED
+            string id = HttpContext.User.Identity.Name;
+            MoviesForEveryone.Models.UserSettings setting = _context.Settings.Where(c => c.userId == id).FirstOrDefault();
             city = Request.Form["cityName"].ToString();
             setting.setCity = city;
 
@@ -163,7 +169,7 @@ namespace MoviesForEveryone.Pages
 
         public MapPageModel(Models.MoviesDbContext context)
         {
-            _context = context;
+            _context = context;            
         }
 
         public void OnPostOptions()

@@ -11,7 +11,13 @@ namespace MoviesForEveryone.Models
         [Key]
         public  int settingsKey { get; set; }
         public int radiusSetting { get; set; }
-        public int userId { get; set; }
+        public string userId { get; set; }
         public string setCity { get; set; }
+
+        public UserSettings() 
+        {
+            radiusSetting = 15;        
+        } 
+
     }
 }

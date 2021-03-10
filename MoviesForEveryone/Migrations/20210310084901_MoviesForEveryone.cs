@@ -28,7 +28,7 @@ namespace MoviesForEveryone.Migrations
                     settingsKey = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     radiusSetting = table.Column<int>(type: "int", nullable: false),
-                    userId = table.Column<int>(type: "int", nullable: false),
+                    userId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     setCity = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -230,7 +230,7 @@ namespace MoviesForEveryone.Migrations
                     negativeKeyKey = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     keyword = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    userID = table.Column<int>(type: "int", nullable: false),
+                    userID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MFEUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
@@ -273,7 +273,7 @@ namespace MoviesForEveryone.Migrations
                     positiveKeyKey = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     keyword = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    userId = table.Column<int>(type: "int", nullable: false),
+                    userId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MFEUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>

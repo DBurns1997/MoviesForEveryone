@@ -34,6 +34,7 @@ namespace MoviesForEveryone
                 .AddDefaultUI()
                 .AddEntityFrameworkStores<MoviesDbContext>();            
             services.AddRazorPages();
+            services.AddHttpContextAccessor();
 
             services.Configure<IdentityOptions>(options =>
             {
