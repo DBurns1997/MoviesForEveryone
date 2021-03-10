@@ -75,7 +75,9 @@ namespace MoviesForEveryone.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new MFEUser { UserName = Input.Email, Id = Input.Email, Email = Input.Email };
+                var _settings = new UserSettings { userId = Input.Email, radiusSetting = 15 };
+                var user = new MFEUser { UserName = Input.Email, Id = Input.Email, Email = Input.Email, settings = _settings };
+                
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

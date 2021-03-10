@@ -12,8 +12,7 @@ namespace MoviesForEveryone.Models
         {
             positiveKeys = new HashSet<PositiveKeys>();
             negativeKeys = new HashSet<NegativeKeys>();
-            opinions = new HashSet<MovieOpinions>();
-            settings = new UserSettings();
+            opinions = new HashSet<MovieOpinions>();            
         }
 
         public virtual ICollection<PositiveKeys> positiveKeys { get; set; }
