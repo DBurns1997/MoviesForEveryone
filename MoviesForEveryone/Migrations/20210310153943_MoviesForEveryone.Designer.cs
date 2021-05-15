@@ -10,7 +10,7 @@ using MoviesForEveryone.Models;
 namespace MoviesForEveryone.Migrations
 {
     [DbContext(typeof(MoviesDbContext))]
-    [Migration("20210310084901_MoviesForEveryone")]
+    [Migration("20210310153943_MoviesForEveryone")]
     partial class MoviesForEveryone
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

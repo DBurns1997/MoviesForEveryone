@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using MoviesForEveryone.Models;
 using Microsoft.EntityFrameworkCore;
 using Quartz;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace MoviesForEveryone
 {
@@ -34,7 +35,7 @@ namespace MoviesForEveryone
                 .AddDefaultUI()
                 .AddEntityFrameworkStores<MoviesDbContext>();            
             services.AddRazorPages();
-            services.AddHttpContextAccessor();
+            services.AddHttpContextAccessor();           
 
             services.Configure<IdentityOptions>(options =>
             {

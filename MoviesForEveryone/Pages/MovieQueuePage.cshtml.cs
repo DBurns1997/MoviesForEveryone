@@ -138,7 +138,6 @@ namespace MoviesForEveryone.Pages
 
         public static async Task<bool> PopulateQueue()
         {
-
             movieQueue = new Queue<Movie>();
             Random rnd = new Random();
             int latestID = 790000, //This is the max ID for movies on TMDB 

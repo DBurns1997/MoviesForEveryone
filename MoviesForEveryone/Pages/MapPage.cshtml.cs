@@ -29,7 +29,9 @@ namespace MoviesForEveryone.Pages
             showOptionsIndicator = false;
             localTheaters = new List<Models.Theater>();           
             string userId = HttpContext.User.Identity.Name;
+
             UserSettings settings = _context.Settings.Where(c => c.userId == userId).FirstOrDefault();
+            
 
             if (city == null && settings.setCity != null)
             {
@@ -125,6 +127,11 @@ namespace MoviesForEveryone.Pages
             }
 
             return RedirectToPage();
+        }
+
+        private UserSettings GetSettings(string id)
+        {
+            return _context.Settings.Where(c => c.userId == id).FirstOrDefault();
         }
 
         public async Task<IActionResult> OnPostSetRadiusAsync()
